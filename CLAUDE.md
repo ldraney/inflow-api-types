@@ -188,10 +188,10 @@ These have GET, PUT, nested arrays, includes, and filters.
 
 | Entity | Schema Lines | Endpoints | get.js | put.js | Tested | Notes |
 |--------|-------------|-----------|--------|--------|--------|-------|
-| CustomFieldDefinition | 3601 | GET, PUT (lines 412-494) | [ ] | [ ] | [ ] | Define custom fields for entities |
-| CustomFieldDropdownOptions | 3667 | GET, PUT (lines 495-590) | [ ] | [ ] | [ ] | Dropdown values for custom fields |
-| CustomFields | 3741 | GET, PUT (lines 592-664) | [ ] | [ ] | [ ] | Get/set custom field values on entities |
-| Webhook | 10430 | GET, PUT, DELETE (lines 2933-3040) | [ ] | [ ] | [ ] | Event subscriptions |
+| CustomFieldDefinition | 3601 | GET, PUT (lines 412-494) | [x] | [x] | [x] | Define custom fields for entities |
+| CustomFieldDropdownOptions | 3667 | GET, PUT (lines 495-590) | [x] | [x] | [x] | Dropdown values for custom fields |
+| CustomFields | 3741 | GET, PUT (lines 592-664) | [x] | [x] | [x] | Print settings for custom fields |
+| Webhook | 10430 | GET, PUT, DELETE (lines 2933-3040) | [x] | [x] | [x] | Event subscriptions |
 
 ### Phase 5: Inventory Operations
 
@@ -230,6 +230,8 @@ The swagger.json documentation has inaccuracies. Always test against the live AP
 |-------|------------------|---------------------|
 | Enum casing | `StockedProduct`, `FixedPrice` | `stockedProduct`, `fixedPrice` |
 | StockTransfer status | `Open`, `InTransit`, `Completed` | `open`, `inTransit`, `completed` |
+| CustomFieldType | `Text`, `Dropdown`, `Date` | `text`, `dropdown`, `date` |
+| CustomFieldEntityType | `Product`, `SalesOrder` | `product`, `salesOrder` |
 | Nullable fields | not always marked | `defaultImage`, image URLs can be `null` |
 | Undocumented fields | missing | `trackLots`, `trackExpiry`, `shelfLifeDays`, `expiryNotificationDays`, `lotId` |
 | AccessRights format | `SALES_SalesOrder_View` | `SalesOrderView` (PascalCase, no prefixes) |
@@ -252,16 +254,15 @@ The swagger.json documentation has inaccuracies. Always test against the live AP
 - **Phase 1 (Reference):** 11/11 complete
 - **Phase 2 (Core):** 6/6 complete
 - **Phase 3 (Transactions):** 3/3 complete
-- **Phase 4 (Custom Fields):** 0/4 complete
+- **Phase 4 (Custom Fields):** 4/4 complete
 - **Phase 5 (Inventory Ops):** 0/4 complete
 - **Phase 6 (Reporting):** 0/1 complete
-- **Total:** 20/29 entities complete
+- **Total:** 24/29 entities complete
 
 ## Next Steps
 
-1. Implement Phase 4: CustomFieldDefinition, CustomFieldDropdownOptions, CustomFields, Webhook
-2. Implement Phase 5: StockCount, CountSheet, StockroomScan, StockroomUser
-3. Implement Phase 6: ProductSummary
+1. Implement Phase 5: StockCount, CountSheet, StockroomScan, StockroomUser
+2. Implement Phase 6: ProductSummary
 
 ## API Reference
 

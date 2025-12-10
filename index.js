@@ -30,3 +30,15 @@ export * from './product-cost-adjustments/index.js';
 
 // Reference entities (read-only lookups)
 export * from './reference/index.js';
+
+// Custom Field Definitions
+export * from './custom-field-definitions/index.js';
+
+// Custom Field Dropdown Options
+export * from './custom-field-dropdown-options/index.js';
+
+// Custom Fields (print settings)
+export * from './custom-fields/index.js';
+
+// Webhooks
+export * from './webhooks/index.js';

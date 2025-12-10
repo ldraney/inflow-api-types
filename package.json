@@ -1,6 +1,7 @@
 {
   "name": "inflow-api-types",
   "version": "0.1.0",
+  "private": true,
   "description": "Zod schema library for the Inflow Inventory API",
   "type": "module",
   "main": "index.js",
@@ -16,10 +17,14 @@
     "./stock-adjustments": "./stock-adjustments/index.js",
     "./product-cost-adjustments": "./product-cost-adjustments/index.js",
     "./reference": "./reference/index.js",
+    "./custom-field-definitions": "./custom-field-definitions/index.js",
+    "./custom-field-dropdown-options": "./custom-field-dropdown-options/index.js",
+    "./custom-fields": "./custom-fields/index.js",
+    "./webhooks": "./webhooks/index.js",
     "./primitives": "./primitives.js"
   },
   "scripts": {
-    "test": "node tests/products.test.js && node tests/vendors.test.js && node tests/customers.test.js && node tests/purchase-orders.test.js && node tests/sales-orders.test.js && node tests/manufacturing-orders.test.js && node tests/stock-transfers.test.js && node tests/stock-adjustments.test.js && node tests/product-cost-adjustments.test.js && node tests/reference.test.js",
+    "test": "node tests/products.test.js && node tests/vendors.test.js && node tests/customers.test.js && node tests/purchase-orders.test.js && node tests/sales-orders.test.js && node tests/manufacturing-orders.test.js && node tests/stock-transfers.test.js && node tests/stock-adjustments.test.js && node tests/product-cost-adjustments.test.js && node tests/reference.test.js && node tests/custom-field-definitions.test.js && node tests/custom-fields.test.js && node tests/webhooks.test.js",
     "test:products": "node tests/products.test.js",
     "test:vendors": "node tests/vendors.test.js",
     "test:customers": "node tests/customers.test.js",
@@ -29,7 +34,10 @@
     "test:stock-transfers": "node tests/stock-transfers.test.js",
     "test:stock-adjustments": "node tests/stock-adjustments.test.js",
     "test:product-cost-adjustments": "node tests/product-cost-adjustments.test.js",
-    "test:reference": "node tests/reference.test.js"
+    "test:reference": "node tests/reference.test.js",
+    "test:custom-field-definitions": "node tests/custom-field-definitions.test.js",
+    "test:custom-fields": "node tests/custom-fields.test.js",
+    "test:webhooks": "node tests/webhooks.test.js"
   },
   "dependencies": {
     "zod": "^3.23.0"
