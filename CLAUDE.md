@@ -138,39 +138,89 @@ Use primitives from `primitives.js`:
 - `decimal` - numeric strings ("19.99")
 - `rowversion` - timestamp for optimistic locking
 
-## Progress
+## Roadmap
 
-### Core Entities
+### Phase 1: Reference Entities (Read-only, simple schemas)
 
-| Entity | swagger.json | get.js | put.js | Tested |
-|--------|--------------|--------|--------|--------|
-| Product | lines 5586-6273 | [ ] | [ ] | [ ] |
-| Vendor | TBD | [ ] | [ ] | [ ] |
-| PurchaseOrder | TBD | [ ] | [ ] | [ ] |
-| ManufacturingOrder | TBD | [ ] | [ ] | [ ] |
+These are lookup tables - typically GET-only, no complex nested structures.
 
-### Reference Entities
+| Entity | Schema Lines | Endpoints | get.js | Tested | Notes |
+|--------|-------------|-----------|--------|--------|-------|
+| Category | 3265 | GET single, GET list | [ ] | [ ] | Has parentCategoryId for hierarchy |
+| Location | 4524 | GET single, GET list | [ ] | [ ] | Has suggested-sublocations endpoints |
+| Currency | 3468 | GET single, GET list | [ ] | [ ] | |
+| PricingScheme | 5485 | GET single, GET list | [ ] | [ ] | Referenced by Product prices |
+| PaymentTerms | 5438 | GET single, GET list | [ ] | [ ] | |
+| TaxCode | 9567 | GET single, GET list | [ ] | [ ] | |
+| TaxingScheme | 9614 | GET single, GET list | [ ] | [ ] | |
+| OperationType | 5377 | GET single, GET list | [ ] | [ ] | For manufacturing operations |
+| AdjustmentReason | 3174 | GET single, GET list | [ ] | [ ] | For stock adjustments |
+| TeamMember | 9725 | GET list only | [ ] | [ ] | No single-item endpoint |
+| UnitOfMeasure | 9823 | (embedded only) | [ ] | [ ] | No direct endpoint, embedded in other entities |
 
-| Entity | swagger.json | schema | Tested |
-|--------|--------------|--------|--------|
-| Category | TBD | [ ] | [ ] |
-| Location | TBD | [ ] | [ ] |
-| Currency | TBD | [ ] | [ ] |
-| PricingScheme | TBD | [ ] | [ ] |
-| PaymentTerms | TBD | [ ] | [ ] |
-| TaxCode | TBD | [ ] | [ ] |
-| TaxingScheme | TBD | [ ] | [ ] |
-| OperationType | TBD | [ ] | [ ] |
-| AdjustmentReason | TBD | [ ] | [ ] |
-| UnitOfMeasure | TBD | [ ] | [ ] |
-| TeamMember | TBD | [ ] | [ ] |
+### Phase 2: Core Business Entities (Full CRUD, complex schemas)
+
+These have GET, PUT, nested arrays, includes, and filters.
+
+| Entity | Schema Lines | Endpoints | get.js | put.js | Tested | Notes |
+|--------|-------------|-----------|--------|--------|--------|-------|
+| Product | 5586-6273 | GET, PUT | [x] | [x] | [x] | Complete |
+| Vendor | 9852 | GET, PUT (lines 2845-2932) | [ ] | [ ] | [ ] | vendorItems link to Products |
+| Customer | 3767 | GET, PUT (lines 284-370) | [ ] | [ ] | [ ] | Similar to Vendor |
+| PurchaseOrder | 6664 | GET, PUT (lines 1620-1747) | [ ] | [ ] | [ ] | Complex: lines, receiving |
+| SalesOrder | 7623 | GET, PUT (lines 1748-1875) | [ ] | [ ] | [ ] | Complex: lines, picking, shipping |
+| ManufacturingOrder | 4556 | GET, PUT (lines 866-1004) | [ ] | [ ] | [ ] | Complex: BOM, operations, picking, putaway |
+
+### Phase 3: Transaction Entities
+
+| Entity | Schema Lines | Endpoints | get.js | put.js | Tested | Notes |
+|--------|-------------|-----------|--------|--------|--------|-------|
+| StockTransfer | 9218 | GET, PUT (lines 2460-2587) | [ ] | [ ] | [ ] | Move inventory between locations |
+| StockAdjustment | 8765 | GET, PUT (lines 1876-2003) | [ ] | [ ] | [ ] | Adjust quantities, requires AdjustmentReason |
+| ProductCostAdjustment | 6330 | GET, PUT (lines 1492-1619) | [ ] | [ ] | [ ] | Adjust product costs |
 
 ### Infrastructure
 
-| File | Status |
-|------|--------|
-| primitives.js | [ ] |
-| index.js | [ ] |
+| File | Status | Notes |
+|------|--------|-------|
+| primitives.js | [x] | uuid, decimal, rowversion, enums |
+| index.js | [x] | Re-exports all modules |
+| package.json | [x] | ES modules, zod dependency |
+| tests/api.js | [x] | API utilities for testing |
+| reference/index.js | [ ] | Will re-export all reference entities |
+
+---
+
+## Lessons Learned
+
+### swagger.json vs Reality
+
+The swagger.json documentation has inaccuracies. Always test against the live API.
+
+| Issue | swagger.json says | API actually returns |
+|-------|------------------|---------------------|
+| Enum casing | `StockedProduct`, `FixedPrice` | `stockedProduct`, `fixedPrice` |
+| Nullable fields | not always marked | `defaultImage`, image URLs can be `null` |
+| Undocumented fields | missing | `trackLots`, `trackExpiry`, `shelfLifeDays`, `expiryNotificationDays`, `lotId` |
+
+### Pattern for Each Entity
+
+1. Read swagger.json schema section
+2. Find endpoint paths and extract includes/filters from descriptions
+3. Write Zod schemas (GET response, PUT request if applicable)
+4. Write test file
+5. Run tests, fix schemas based on actual API responses
+6. Update this roadmap
+7. Commit
+
+---
+
+## Progress Summary
+
+- **Phase 1 (Reference):** 0/11 complete
+- **Phase 2 (Core):** 1/6 complete (Product done)
+- **Phase 3 (Transactions):** 0/3 complete
+- **Total:** 1/20 entities complete
 
 ## API Reference
 
