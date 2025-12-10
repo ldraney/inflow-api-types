@@ -7,12 +7,22 @@
   "exports": {
     ".": "./index.js",
     "./products": "./products/index.js",
+    "./vendors": "./vendors/index.js",
+    "./customers": "./customers/index.js",
+    "./purchase-orders": "./purchase-orders/index.js",
+    "./sales-orders": "./sales-orders/index.js",
+    "./manufacturing-orders": "./manufacturing-orders/index.js",
     "./reference": "./reference/index.js",
     "./primitives": "./primitives.js"
   },
   "scripts": {
-    "test": "node tests/products.test.js && node tests/reference.test.js",
+    "test": "node tests/products.test.js && node tests/vendors.test.js && node tests/customers.test.js && node tests/purchase-orders.test.js && node tests/sales-orders.test.js && node tests/manufacturing-orders.test.js && node tests/reference.test.js",
     "test:products": "node tests/products.test.js",
+    "test:vendors": "node tests/vendors.test.js",
+    "test:customers": "node tests/customers.test.js",
+    "test:purchase-orders": "node tests/purchase-orders.test.js",
+    "test:sales-orders": "node tests/sales-orders.test.js",
+    "test:manufacturing-orders": "node tests/manufacturing-orders.test.js",
     "test:reference": "node tests/reference.test.js"
   },
   "dependencies": {

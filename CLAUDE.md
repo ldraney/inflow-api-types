@@ -165,11 +165,11 @@ These have GET, PUT, nested arrays, includes, and filters.
 | Entity | Schema Lines | Endpoints | get.js | put.js | Tested | Notes |
 |--------|-------------|-----------|--------|--------|--------|-------|
 | Product | 5586-6273 | GET, PUT | [x] | [x] | [x] | Complete |
-| Vendor | 9852 | GET, PUT (lines 2845-2932) | [ ] | [ ] | [ ] | vendorItems link to Products |
-| Customer | 3767 | GET, PUT (lines 284-370) | [ ] | [ ] | [ ] | Similar to Vendor |
-| PurchaseOrder | 6664 | GET, PUT (lines 1620-1747) | [ ] | [ ] | [ ] | Complex: lines, receiving |
-| SalesOrder | 7623 | GET, PUT (lines 1748-1875) | [ ] | [ ] | [ ] | Complex: lines, picking, shipping |
-| ManufacturingOrder | 4556 | GET, PUT (lines 866-1004) | [ ] | [ ] | [ ] | Complex: BOM, operations, picking, putaway |
+| Vendor | 9852 | GET, PUT (lines 2845-2932) | [x] | [x] | [x] | vendorItems link to Products |
+| Customer | 3767 | GET, PUT (lines 284-370) | [x] | [x] | [x] | Similar to Vendor |
+| PurchaseOrder | 6664 | GET, PUT (lines 1620-1747) | [x] | [x] | [x] | Complex: lines, receiving |
+| SalesOrder | 7623 | GET, PUT (lines 1748-1875) | [x] | [x] | [x] | Complex: lines, picking, shipping |
+| ManufacturingOrder | 4556 | GET, PUT (lines 866-1004) | [x] | [x] | [x] | Complex: BOM, operations, picking, putaway |
 
 ### Phase 3: Transaction Entities
 
@@ -219,9 +219,14 @@ The swagger.json documentation has inaccuracies. Always test against the live AP
 ## Progress Summary
 
 - **Phase 1 (Reference):** 11/11 complete
-- **Phase 2 (Core):** 1/6 complete (Product done)
+- **Phase 2 (Core):** 6/6 complete
 - **Phase 3 (Transactions):** 0/3 complete
-- **Total:** 12/20 entities complete
+- **Total:** 17/20 entities complete
+
+## Next Steps
+1. Implement StockTransfer entity (Phase 3)
+2. Implement StockAdjustment entity (Phase 3)
+3. Implement ProductCostAdjustment entity (Phase 3)
 
 ## API Reference
 
