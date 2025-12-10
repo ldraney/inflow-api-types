@@ -146,17 +146,17 @@ These are lookup tables - typically GET-only, no complex nested structures.
 
 | Entity | Schema Lines | Endpoints | get.js | Tested | Notes |
 |--------|-------------|-----------|--------|--------|-------|
-| Category | 3265 | GET single, GET list | [ ] | [ ] | Has parentCategoryId for hierarchy |
-| Location | 4524 | GET single, GET list | [ ] | [ ] | Has suggested-sublocations endpoints |
-| Currency | 3468 | GET single, GET list | [ ] | [ ] | |
-| PricingScheme | 5485 | GET single, GET list | [ ] | [ ] | Referenced by Product prices |
-| PaymentTerms | 5438 | GET single, GET list | [ ] | [ ] | |
-| TaxCode | 9567 | GET single, GET list | [ ] | [ ] | |
-| TaxingScheme | 9614 | GET single, GET list | [ ] | [ ] | |
-| OperationType | 5377 | GET single, GET list | [ ] | [ ] | For manufacturing operations |
-| AdjustmentReason | 3174 | GET single, GET list | [ ] | [ ] | For stock adjustments |
-| TeamMember | 9725 | GET list only | [ ] | [ ] | No single-item endpoint |
-| UnitOfMeasure | 9823 | (embedded only) | [ ] | [ ] | No direct endpoint, embedded in other entities |
+| Category | 3265 | GET single, GET list | [x] | [x] | Has parentCategoryId for hierarchy |
+| Location | 4524 | GET single, GET list | [x] | [x] | Has suggested-sublocations endpoints |
+| Currency | 3468 | GET single, GET list | [x] | [x] | |
+| PricingScheme | 5485 | GET single, GET list | [x] | [x] | Referenced by Product prices |
+| PaymentTerms | 5438 | GET single, GET list | [x] | [x] | |
+| TaxCode | 9567 | GET single, GET list | [x] | [x] | |
+| TaxingScheme | 9614 | GET single, GET list | [x] | [x] | |
+| OperationType | 5377 | GET single, GET list | [x] | [x] | For manufacturing operations |
+| AdjustmentReason | 3174 | GET single, GET list | [x] | [x] | For stock adjustments |
+| TeamMember | 9725 | GET list only | [x] | [x] | No single-item endpoint |
+| UnitOfMeasure | 9823 | (embedded only) | [x] | [x] | No direct endpoint, embedded in other entities |
 
 ### Phase 2: Core Business Entities (Full CRUD, complex schemas)
 
@@ -202,6 +202,7 @@ The swagger.json documentation has inaccuracies. Always test against the live AP
 | Enum casing | `StockedProduct`, `FixedPrice` | `stockedProduct`, `fixedPrice` |
 | Nullable fields | not always marked | `defaultImage`, image URLs can be `null` |
 | Undocumented fields | missing | `trackLots`, `trackExpiry`, `shelfLifeDays`, `expiryNotificationDays`, `lotId` |
+| AccessRights format | `SALES_SalesOrder_View` | `SalesOrderView` (PascalCase, no prefixes) |
 
 ### Pattern for Each Entity
 
@@ -217,10 +218,10 @@ The swagger.json documentation has inaccuracies. Always test against the live AP
 
 ## Progress Summary
 
-- **Phase 1 (Reference):** 0/11 complete
+- **Phase 1 (Reference):** 11/11 complete
 - **Phase 2 (Core):** 1/6 complete (Product done)
 - **Phase 3 (Transactions):** 0/3 complete
-- **Total:** 1/20 entities complete
+- **Total:** 12/20 entities complete
 
 ## API Reference
 
