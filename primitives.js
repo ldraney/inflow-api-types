@@ -40,15 +40,18 @@ export const int32 = z.number().int();
 
 /**
  * Item type enum - cannot be changed once set
+ * Note: API returns camelCase despite swagger showing PascalCase
  */
-export const ItemType = z.enum(['StockedProduct', 'NonstockedProduct', 'Service']);
+export const ItemType = z.enum(['stockedProduct', 'nonstockedProduct', 'service']);
 
 /**
  * Reorder method enum
+ * Note: API returns camelCase despite swagger showing PascalCase
  */
-export const ReorderMethod = z.enum(['PurchaseOrder', 'WorkOrder', 'StockTransfer']);
+export const ReorderMethod = z.enum(['purchaseOrder', 'workOrder', 'stockTransfer']);
 
 /**
  * Price type enum
+ * Note: API returns camelCase despite swagger showing PascalCase
  */
-export const PriceType = z.enum(['FixedPrice', 'FixedMarkup']);
+export const PriceType = z.enum(['fixedPrice', 'fixedMarkup']);

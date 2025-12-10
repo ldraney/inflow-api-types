@@ -7,15 +7,16 @@ import { uuid, decimal, decimalNullable, rowversion, dateTime, int32, int64, Ite
 
 /**
  * Image schema - included via ?include=images or ?include=defaultImage
+ * Note: URL fields can be null for some image formats
  */
 export const ImageSchema = z.object({
   imageId: uuid.optional(),
-  thumbUrl: z.string().optional(),
-  smallUrl: z.string().optional(),
-  mediumUrl: z.string().optional(),
-  mediumUncroppedUrl: z.string().optional(),
-  largeUrl: z.string().optional(),
-  originalUrl: z.string().optional(),
+  thumbUrl: z.string().nullable().optional(),
+  smallUrl: z.string().nullable().optional(),
+  mediumUrl: z.string().nullable().optional(),
+  mediumUncroppedUrl: z.string().nullable().optional(),
+  largeUrl: z.string().nullable().optional(),
+  originalUrl: z.string().nullable().optional(),
 });
 
 /**
@@ -40,6 +41,7 @@ export const InventoryLineSchema = z.object({
   quantityOnHand: decimal.optional(),
   sublocation: z.string().optional(),
   serial: z.string().optional(),
+  lotId: uuid.nullable().optional(), // Not in swagger but returned by API
   timestamp: rowversion.optional(),
 });
 
@@ -180,8 +182,12 @@ export const ProductGET = z.object({
   // Unit of measure
   standardUomName: z.string().optional(),
 
-  // Serial tracking
+  // Serial/Lot/Expiry tracking
   trackSerials: z.boolean().optional(),
+  trackLots: z.boolean().optional(),        // Not in swagger but returned by API
+  trackExpiry: z.boolean().optional(),      // Not in swagger but returned by API
+  shelfLifeDays: int32.nullable().optional(),         // Not in swagger
+  expiryNotificationDays: int32.nullable().optional(), // Not in swagger
 
   // Manufacturing
   autoAssemble: z.boolean().optional(),
@@ -197,7 +203,7 @@ export const ProductGET = z.object({
 
   // Images
   defaultImageId: uuid.nullable().optional(),
-  defaultImage: ImageSchema.optional(),
+  defaultImage: ImageSchema.nullable().optional(),
   images: z.array(ImageSchema).optional(),
 
   // Attachments (read-only)

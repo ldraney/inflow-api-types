@@ -1,0 +1,28 @@
+{
+  "name": "inflow-api-types",
+  "version": "0.1.0",
+  "description": "Zod schema library for the Inflow Inventory API",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./products": "./products/index.js",
+    "./primitives": "./primitives.js"
+  },
+  "scripts": {
+    "test": "node tests/products.test.js",
+    "test:products": "node tests/products.test.js"
+  },
+  "dependencies": {
+    "zod": "^3.23.0"
+  },
+  "keywords": [
+    "inflow",
+    "inventory",
+    "api",
+    "zod",
+    "validation",
+    "schema"
+  ],
+  "license": "MIT"
+}
