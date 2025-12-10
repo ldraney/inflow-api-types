@@ -12,17 +12,23 @@
     "./purchase-orders": "./purchase-orders/index.js",
     "./sales-orders": "./sales-orders/index.js",
     "./manufacturing-orders": "./manufacturing-orders/index.js",
+    "./stock-transfers": "./stock-transfers/index.js",
+    "./stock-adjustments": "./stock-adjustments/index.js",
+    "./product-cost-adjustments": "./product-cost-adjustments/index.js",
     "./reference": "./reference/index.js",
     "./primitives": "./primitives.js"
   },
   "scripts": {
-    "test": "node tests/products.test.js && node tests/vendors.test.js && node tests/customers.test.js && node tests/purchase-orders.test.js && node tests/sales-orders.test.js && node tests/manufacturing-orders.test.js && node tests/reference.test.js",
+    "test": "node tests/products.test.js && node tests/vendors.test.js && node tests/customers.test.js && node tests/purchase-orders.test.js && node tests/sales-orders.test.js && node tests/manufacturing-orders.test.js && node tests/stock-transfers.test.js && node tests/stock-adjustments.test.js && node tests/product-cost-adjustments.test.js && node tests/reference.test.js",
     "test:products": "node tests/products.test.js",
     "test:vendors": "node tests/vendors.test.js",
     "test:customers": "node tests/customers.test.js",
     "test:purchase-orders": "node tests/purchase-orders.test.js",
     "test:sales-orders": "node tests/sales-orders.test.js",
     "test:manufacturing-orders": "node tests/manufacturing-orders.test.js",
+    "test:stock-transfers": "node tests/stock-transfers.test.js",
+    "test:stock-adjustments": "node tests/stock-adjustments.test.js",
+    "test:product-cost-adjustments": "node tests/product-cost-adjustments.test.js",
     "test:reference": "node tests/reference.test.js"
   },
   "dependencies": {

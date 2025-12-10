@@ -32,8 +32,13 @@ inflow-api-types/
 │   ├── get.js            # ProductGET schema, includes, filters
 │   └── put.js            # ProductPUT schema, constraints
 ├── vendors/
+├── customers/
 ├── purchase-orders/
+├── sales-orders/
 ├── manufacturing-orders/
+├── stock-transfers/
+├── stock-adjustments/
+├── product-cost-adjustments/
 ├── reference/            # Category, Location, Currency, etc.
 ├── swagger.json          # Source (do not edit)
 └── CLAUDE.md
@@ -175,9 +180,33 @@ These have GET, PUT, nested arrays, includes, and filters.
 
 | Entity | Schema Lines | Endpoints | get.js | put.js | Tested | Notes |
 |--------|-------------|-----------|--------|--------|--------|-------|
-| StockTransfer | 9218 | GET, PUT (lines 2460-2587) | [ ] | [ ] | [ ] | Move inventory between locations |
-| StockAdjustment | 8765 | GET, PUT (lines 1876-2003) | [ ] | [ ] | [ ] | Adjust quantities, requires AdjustmentReason |
-| ProductCostAdjustment | 6330 | GET, PUT (lines 1492-1619) | [ ] | [ ] | [ ] | Adjust product costs |
+| StockTransfer | 9218 | GET, PUT (lines 2460-2587) | [x] | [x] | [x] | Move inventory between locations |
+| StockAdjustment | 8765 | GET, PUT (lines 1876-2003) | [x] | [x] | [x] | Adjust quantities, requires AdjustmentReason |
+| ProductCostAdjustment | 6330 | GET, PUT (lines 1492-1619) | [x] | [x] | [x] | Adjust product costs |
+
+### Phase 4: Custom Fields & Configuration
+
+| Entity | Schema Lines | Endpoints | get.js | put.js | Tested | Notes |
+|--------|-------------|-----------|--------|--------|--------|-------|
+| CustomFieldDefinition | 3601 | GET, PUT (lines 412-494) | [ ] | [ ] | [ ] | Define custom fields for entities |
+| CustomFieldDropdownOptions | 3667 | GET, PUT (lines 495-590) | [ ] | [ ] | [ ] | Dropdown values for custom fields |
+| CustomFields | 3741 | GET, PUT (lines 592-664) | [ ] | [ ] | [ ] | Get/set custom field values on entities |
+| Webhook | 10430 | GET, PUT, DELETE (lines 2933-3040) | [ ] | [ ] | [ ] | Event subscriptions |
+
+### Phase 5: Inventory Operations
+
+| Entity | Schema Lines | Endpoints | get.js | put.js | Tested | Notes |
+|--------|-------------|-----------|--------|--------|--------|-------|
+| StockCount | 8949 | GET, PUT (lines 2004-2108) | [ ] | [ ] | [ ] | Physical inventory counts |
+| CountSheet | 3300 | GET, PUT, DELETE (lines 2109-2290) | [ ] | [ ] | [ ] | Sheets within stock counts |
+| StockroomScan | - | GET, PUT (lines 2291-2375) | [ ] | [ ] | [ ] | Mobile scanning operations |
+| StockroomUser | - | GET (lines 2376-2459) | [ ] | n/a | [ ] | Mobile app users (read-only) |
+
+### Phase 6: Reporting
+
+| Entity | Schema Lines | Endpoints | get.js | put.js | Tested | Notes |
+|--------|-------------|-----------|--------|--------|--------|-------|
+| ProductSummary | 6516 | GET, POST (lines 1393-1491) | [ ] | [ ] | [ ] | Aggregated product inventory data |
 
 ### Infrastructure
 
@@ -187,7 +216,7 @@ These have GET, PUT, nested arrays, includes, and filters.
 | index.js | [x] | Re-exports all modules |
 | package.json | [x] | ES modules, zod dependency |
 | tests/api.js | [x] | API utilities for testing |
-| reference/index.js | [ ] | Will re-export all reference entities |
+| reference/index.js | [x] | Re-exports all reference entities |
 
 ---
 
@@ -200,9 +229,11 @@ The swagger.json documentation has inaccuracies. Always test against the live AP
 | Issue | swagger.json says | API actually returns |
 |-------|------------------|---------------------|
 | Enum casing | `StockedProduct`, `FixedPrice` | `stockedProduct`, `fixedPrice` |
+| StockTransfer status | `Open`, `InTransit`, `Completed` | `open`, `inTransit`, `completed` |
 | Nullable fields | not always marked | `defaultImage`, image URLs can be `null` |
 | Undocumented fields | missing | `trackLots`, `trackExpiry`, `shelfLifeDays`, `expiryNotificationDays`, `lotId` |
 | AccessRights format | `SALES_SalesOrder_View` | `SalesOrderView` (PascalCase, no prefixes) |
+| customFields include | listed as valid | Not valid for stockTransfers, stockAdjustments |
 
 ### Pattern for Each Entity
 
@@ -220,13 +251,17 @@ The swagger.json documentation has inaccuracies. Always test against the live AP
 
 - **Phase 1 (Reference):** 11/11 complete
 - **Phase 2 (Core):** 6/6 complete
-- **Phase 3 (Transactions):** 0/3 complete
-- **Total:** 17/20 entities complete
+- **Phase 3 (Transactions):** 3/3 complete
+- **Phase 4 (Custom Fields):** 0/4 complete
+- **Phase 5 (Inventory Ops):** 0/4 complete
+- **Phase 6 (Reporting):** 0/1 complete
+- **Total:** 20/29 entities complete
 
 ## Next Steps
-1. Implement StockTransfer entity (Phase 3)
-2. Implement StockAdjustment entity (Phase 3)
-3. Implement ProductCostAdjustment entity (Phase 3)
+
+1. Implement Phase 4: CustomFieldDefinition, CustomFieldDropdownOptions, CustomFields, Webhook
+2. Implement Phase 5: StockCount, CountSheet, StockroomScan, StockroomUser
+3. Implement Phase 6: ProductSummary
 
 ## API Reference
 

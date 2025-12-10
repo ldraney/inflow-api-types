@@ -19,5 +19,14 @@ export * from './sales-orders/index.js';
 // ManufacturingOrders
 export * from './manufacturing-orders/index.js';
 
+// StockTransfers
+export * from './stock-transfers/index.js';
+
+// StockAdjustments
+export * from './stock-adjustments/index.js';
+
+// ProductCostAdjustments
+export * from './product-cost-adjustments/index.js';
+
 // Reference entities (read-only lookups)
 export * from './reference/index.js';
