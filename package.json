@@ -21,10 +21,14 @@
     "./custom-field-dropdown-options": "./custom-field-dropdown-options/index.js",
     "./custom-fields": "./custom-fields/index.js",
     "./webhooks": "./webhooks/index.js",
+    "./stock-counts": "./stock-counts/index.js",
+    "./count-sheets": "./count-sheets/index.js",
+    "./stockroom-scans": "./stockroom-scans/index.js",
+    "./stockroom-users": "./stockroom-users/index.js",
     "./primitives": "./primitives.js"
   },
   "scripts": {
-    "test": "node tests/products.test.js && node tests/vendors.test.js && node tests/customers.test.js && node tests/purchase-orders.test.js && node tests/sales-orders.test.js && node tests/manufacturing-orders.test.js && node tests/stock-transfers.test.js && node tests/stock-adjustments.test.js && node tests/product-cost-adjustments.test.js && node tests/reference.test.js && node tests/custom-field-definitions.test.js && node tests/custom-fields.test.js && node tests/webhooks.test.js",
+    "test": "node tests/products.test.js && node tests/vendors.test.js && node tests/customers.test.js && node tests/purchase-orders.test.js && node tests/sales-orders.test.js && node tests/manufacturing-orders.test.js && node tests/stock-transfers.test.js && node tests/stock-adjustments.test.js && node tests/product-cost-adjustments.test.js && node tests/reference.test.js && node tests/custom-field-definitions.test.js && node tests/custom-fields.test.js && node tests/webhooks.test.js && node tests/stock-counts.test.js && node tests/stockroom.test.js",
     "test:products": "node tests/products.test.js",
     "test:vendors": "node tests/vendors.test.js",
     "test:customers": "node tests/customers.test.js",
@@ -37,7 +41,9 @@
     "test:reference": "node tests/reference.test.js",
     "test:custom-field-definitions": "node tests/custom-field-definitions.test.js",
     "test:custom-fields": "node tests/custom-fields.test.js",
-    "test:webhooks": "node tests/webhooks.test.js"
+    "test:webhooks": "node tests/webhooks.test.js",
+    "test:stock-counts": "node tests/stock-counts.test.js",
+    "test:stockroom": "node tests/stockroom.test.js"
   },
   "dependencies": {
     "zod": "^3.23.0"

@@ -42,3 +42,15 @@ export * from './custom-fields/index.js';
 
 // Webhooks
 export * from './webhooks/index.js';
+
+// StockCounts
+export * from './stock-counts/index.js';
+
+// CountSheets
+export * from './count-sheets/index.js';
+
+// StockroomScans
+export * from './stockroom-scans/index.js';
+
+// StockroomUsers
+export * from './stockroom-users/index.js';

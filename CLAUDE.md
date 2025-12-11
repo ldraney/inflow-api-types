@@ -17,6 +17,42 @@ const product = ProductGET.parse(await api.get('/products/123'));
 // Autocomplete works. Validation works. Types inferred.
 ```
 
+## Installation
+
+This is a private package. Install via git dependency:
+
+```bash
+# npm (HTTPS)
+npm install git+https://github.com/ldraney/inflow-api-types.git
+
+# npm (SSH)
+npm install git+ssh://git@github.com:youruser/inflow-api-types.git
+
+# yarn
+yarn add git+https://github.com/ldraney/inflow-api-types.git
+```
+
+Or add directly to `package.json`:
+
+```json
+{
+  "dependencies": {
+    "inflow-api-types": "github:ldraney/inflow-api-types"
+  }
+}
+```
+
+To pin a specific version/commit:
+
+```json
+{
+  "dependencies": {
+    "inflow-api-types": "github:ldraney/inflow-api-types#v0.1.0",
+    "inflow-api-types": "github:ldraney/inflow-api-types#commit-sha"
+  }
+}
+```
+
 ## Source of Truth
 
 `swagger.json` - Inflow Cloud API OpenAPI 3.0.4 spec (version 2025-06-24)
@@ -197,10 +233,10 @@ These have GET, PUT, nested arrays, includes, and filters.
 
 | Entity | Schema Lines | Endpoints | get.js | put.js | Tested | Notes |
 |--------|-------------|-----------|--------|--------|--------|-------|
-| StockCount | 8949 | GET, PUT (lines 2004-2108) | [ ] | [ ] | [ ] | Physical inventory counts |
-| CountSheet | 3300 | GET, PUT, DELETE (lines 2109-2290) | [ ] | [ ] | [ ] | Sheets within stock counts |
-| StockroomScan | - | GET, PUT (lines 2291-2375) | [ ] | [ ] | [ ] | Mobile scanning operations |
-| StockroomUser | - | GET (lines 2376-2459) | [ ] | n/a | [ ] | Mobile app users (read-only) |
+| StockCount | 8949 | GET, PUT (lines 2004-2108) | [x] | [x] | [x] | Physical inventory counts |
+| CountSheet | 3300 | GET, PUT, DELETE (lines 2109-2290) | [x] | [x] | [x] | Sheets within stock counts |
+| StockroomScan | 9443 | GET, PUT (lines 2288-2372) | [x] | [x] | [x] | Mobile scanning (ObjectSubset), requires Stockroom feature |
+| StockroomUser | 9474 | GET (lines 2373-2459) | [x] | n/a | [x] | Mobile app users (ObjectSubset format) |
 
 ### Phase 6: Reporting
 
@@ -255,14 +291,13 @@ The swagger.json documentation has inaccuracies. Always test against the live AP
 - **Phase 2 (Core):** 6/6 complete
 - **Phase 3 (Transactions):** 3/3 complete
 - **Phase 4 (Custom Fields):** 4/4 complete
-- **Phase 5 (Inventory Ops):** 0/4 complete
+- **Phase 5 (Inventory Ops):** 4/4 complete
 - **Phase 6 (Reporting):** 0/1 complete
-- **Total:** 24/29 entities complete
+- **Total:** 28/29 entities complete
 
 ## Next Steps
 
-1. Implement Phase 5: StockCount, CountSheet, StockroomScan, StockroomUser
-2. Implement Phase 6: ProductSummary
+1. Implement Phase 6: ProductSummary
 
 ## API Reference
 
