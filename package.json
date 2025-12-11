@@ -1,8 +1,12 @@
 {
   "name": "inflow-api-types",
   "version": "1.0.0",
-  "private": true,
   "description": "Zod schema library for the Inflow Inventory API",
+  "author": "ldraney",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ldraney/inflow-api-types.git"
+  },
   "type": "module",
   "main": "index.js",
   "exports": {
