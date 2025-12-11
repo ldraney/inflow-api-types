@@ -4,6 +4,8 @@ Zod schema library for the [Inflow Inventory API](https://www.inflowinventory.co
 
 ## Installation
 
+**No build step required.** This is pure JavaScript with Zod schemas - install and use immediately.
+
 Install via git dependency:
 
 ```bash

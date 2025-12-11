@@ -19,36 +19,22 @@ const product = ProductGET.parse(await api.get('/products/123'));
 
 ## Installation
 
-This is a private package. Install via git dependency:
+**No build step required.** Pure JavaScript with Zod - install and use immediately.
 
 ```bash
-# npm (HTTPS)
-npm install git+https://github.com/ldraney/inflow-api-types.git
+# Install from GitHub (recommended: pin to version)
+npm install github:ldraney/inflow-api-types#v1.0.0
 
-# npm (SSH)
-npm install git+ssh://git@github.com:youruser/inflow-api-types.git
-
-# yarn
-yarn add git+https://github.com/ldraney/inflow-api-types.git
+# Or latest from master
+npm install github:ldraney/inflow-api-types
 ```
 
-Or add directly to `package.json`:
+Or add to `package.json`:
 
 ```json
 {
   "dependencies": {
-    "inflow-api-types": "github:ldraney/inflow-api-types"
-  }
-}
-```
-
-To pin a specific version/commit:
-
-```json
-{
-  "dependencies": {
-    "inflow-api-types": "github:ldraney/inflow-api-types#v0.1.0",
-    "inflow-api-types": "github:ldraney/inflow-api-types#commit-sha"
+    "inflow-api-types": "github:ldraney/inflow-api-types#v1.0.0"
   }
 }
 ```
