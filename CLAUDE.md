@@ -242,7 +242,7 @@ These have GET, PUT, nested arrays, includes, and filters.
 
 | Entity | Schema Lines | Endpoints | get.js | put.js | Tested | Notes |
 |--------|-------------|-----------|--------|--------|--------|-------|
-| ProductSummary | 6516 | GET, POST (lines 1393-1491) | [ ] | [ ] | [ ] | Aggregated product inventory data |
+| ProductSummary | 6516 | GET, POST (lines 1393-1491) | [x] | n/a | [x] | Aggregated inventory data, POST is for bulk fetch not create |
 
 ### Infrastructure
 
@@ -272,6 +272,7 @@ The swagger.json documentation has inaccuracies. Always test against the live AP
 | Undocumented fields | missing | `trackLots`, `trackExpiry`, `shelfLifeDays`, `expiryNotificationDays`, `lotId` |
 | AccessRights format | `SALES_SalesOrder_View` | `SalesOrderView` (PascalCase, no prefixes) |
 | customFields include | listed as valid | Not valid for stockTransfers, stockAdjustments |
+| ProductSummary quantities | `type: number, format: double` | Decimal strings like `"0.00000"` |
 
 ### Pattern for Each Entity
 
@@ -292,12 +293,8 @@ The swagger.json documentation has inaccuracies. Always test against the live AP
 - **Phase 3 (Transactions):** 3/3 complete
 - **Phase 4 (Custom Fields):** 4/4 complete
 - **Phase 5 (Inventory Ops):** 4/4 complete
-- **Phase 6 (Reporting):** 0/1 complete
-- **Total:** 28/29 entities complete
-
-## Next Steps
-
-1. Implement Phase 6: ProductSummary
+- **Phase 6 (Reporting):** 1/1 complete
+- **Total:** 29/29 entities complete
 
 ## API Reference
 

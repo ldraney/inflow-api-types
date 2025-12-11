@@ -1,20 +1,20 @@
 # inflow-api-types
 
-Zod schema library for the [Inflow Inventory API](https://www.inflowinventory.com/). Provides typed, validated, importable schemas for all API entities.
+Zod schema library for the [Inflow Inventory API](https://www.inflowinventory.com/). Provides typed, validated, importable schemas for all 29 API entities.
 
 ## Installation
 
-This is a private package. Install via git dependency:
+Install via git dependency:
 
 ```bash
-# npm (HTTPS)
+# npm
 npm install git+https://github.com/ldraney/inflow-api-types.git
-
-# npm (SSH)
-npm install git+ssh://git@github.com:youruser/inflow-api-types.git
 
 # yarn
 yarn add git+https://github.com/ldraney/inflow-api-types.git
+
+# pnpm
+pnpm add git+https://github.com/ldraney/inflow-api-types.git
 ```
 
 Or add directly to `package.json`:
@@ -27,81 +27,321 @@ Or add directly to `package.json`:
 }
 ```
 
-To pin a specific version/commit:
+Pin a specific version:
 
 ```json
 {
   "dependencies": {
-    "inflow-api-types": "github:ldraney/inflow-api-types#v0.1.0"
+    "inflow-api-types": "github:ldraney/inflow-api-types#v1.0.0"
   }
 }
 ```
 
-## Usage
+## Quick Start
 
 ```javascript
 import { ProductGET, ProductPUT, ProductConstraints } from 'inflow-api-types/products';
-import { VendorGET } from 'inflow-api-types/vendors';
-import { CategoryGET } from 'inflow-api-types/reference';
 
-// Validate GET response
-const product = ProductGET.parse(apiResponse);
+// Validate API response
+const response = await fetch(`${BASE_URL}/products/${id}`, { headers });
+const data = await response.json();
+const product = ProductGET.parse(data); // Throws if invalid
 
-// Validate PUT request before sending
-const payload = ProductPUT.parse(userInput);
+// Safe parsing (no throw)
+const result = ProductGET.safeParse(data);
+if (result.success) {
+  console.log(result.data.name);
+} else {
+  console.error(result.error);
+}
 
-// Check what's writable
-const writableFields = Object.keys(ProductPUT.shape)
-  .filter(k => !ProductConstraints.readOnly.includes(k));
+// Validate before PUT
+const payload = ProductPUT.parse({
+  productId: crypto.randomUUID(),
+  name: 'New Product',
+  itemType: 'stockedProduct',
+});
+await fetch(`${BASE_URL}/products`, {
+  method: 'PUT',
+  body: JSON.stringify(payload),
+  headers,
+});
 ```
 
-## Available Imports
+## Using with AI Assistants (Claude, etc.)
+
+When building Inflow-related projects with AI assistance, add this to your project's `CLAUDE.md` or equivalent instructions file:
+
+```markdown
+## Inflow API Integration
+
+This project uses `inflow-api-types` for Inflow Inventory API validation.
+
+### Key Resources
+- Schemas: `node_modules/inflow-api-types/` - All Zod schemas
+- API Docs: `node_modules/inflow-api-types/CLAUDE.md` - Detailed entity documentation
+- Swagger: `node_modules/inflow-api-types/swagger.json` - OpenAPI spec (note: has inaccuracies)
+
+### Schema Pattern
+Each entity has:
+- `{Entity}GET` - Response validation
+- `{Entity}PUT` - Request validation
+- `{Entity}Includes` - Available ?include= options
+- `{Entity}Filters` - Available ?filter[x]= options
+- `{Entity}Constraints` - Read-only/immutable fields
+
+### Trust the Schemas
+The schemas in this package have been tested against the live API.
+When swagger.json conflicts with these schemas, trust the schemas.
+
+### Common Gotchas
+- Enum values are camelCase (e.g., 'stockedProduct' not 'StockedProduct')
+- Decimal fields return as strings (e.g., "19.99" not 19.99)
+- Many fields marked required in swagger are actually optional
+- Some ?include= options don't work on certain entities
+```
+
+## Available Entities
+
+### Core Business (GET + PUT)
+| Entity | Import Path |
+|--------|-------------|
+| Product | `inflow-api-types/products` |
+| Vendor | `inflow-api-types/vendors` |
+| Customer | `inflow-api-types/customers` |
+| Purchase Order | `inflow-api-types/purchase-orders` |
+| Sales Order | `inflow-api-types/sales-orders` |
+| Manufacturing Order | `inflow-api-types/manufacturing-orders` |
+
+### Transactions (GET + PUT)
+| Entity | Import Path |
+|--------|-------------|
+| Stock Transfer | `inflow-api-types/stock-transfers` |
+| Stock Adjustment | `inflow-api-types/stock-adjustments` |
+| Product Cost Adjustment | `inflow-api-types/product-cost-adjustments` |
+
+### Inventory Operations (GET + PUT)
+| Entity | Import Path |
+|--------|-------------|
+| Stock Count | `inflow-api-types/stock-counts` |
+| Count Sheet | `inflow-api-types/count-sheets` |
+| Stockroom Scan | `inflow-api-types/stockroom-scans` |
+| Stockroom User | `inflow-api-types/stockroom-users` (GET only) |
+
+### Configuration (GET + PUT)
+| Entity | Import Path |
+|--------|-------------|
+| Custom Field Definition | `inflow-api-types/custom-field-definitions` |
+| Custom Field Dropdown Options | `inflow-api-types/custom-field-dropdown-options` |
+| Custom Fields | `inflow-api-types/custom-fields` |
+| Webhook | `inflow-api-types/webhooks` |
+
+### Reference (GET only)
+| Entity | Import Path |
+|--------|-------------|
+| Category | `inflow-api-types/reference` |
+| Location | `inflow-api-types/reference` |
+| Currency | `inflow-api-types/reference` |
+| Pricing Scheme | `inflow-api-types/reference` |
+| Payment Terms | `inflow-api-types/reference` |
+| Tax Code | `inflow-api-types/reference` |
+| Taxing Scheme | `inflow-api-types/reference` |
+| Operation Type | `inflow-api-types/reference` |
+| Adjustment Reason | `inflow-api-types/reference` |
+| Team Member | `inflow-api-types/reference` |
+| Unit of Measure | `inflow-api-types/reference` |
+
+### Reporting (GET + POST)
+| Entity | Import Path |
+|--------|-------------|
+| Product Summary | `inflow-api-types/product-summary` |
+
+## Common Patterns
+
+### Working with Includes
 
 ```javascript
-// All schemas at once
-import { ProductGET, VendorGET, CustomerGET, ... } from 'inflow-api-types';
+import { ProductGET, ProductIncludes } from 'inflow-api-types/products';
 
-// Or by subpath (tree-shakeable)
-import { ProductGET, ProductPUT } from 'inflow-api-types/products';
-import { VendorGET, VendorPUT } from 'inflow-api-types/vendors';
-import { CustomerGET, CustomerPUT } from 'inflow-api-types/customers';
-import { PurchaseOrderGET, PurchaseOrderPUT } from 'inflow-api-types/purchase-orders';
-import { SalesOrderGET, SalesOrderPUT } from 'inflow-api-types/sales-orders';
-import { ManufacturingOrderGET, ManufacturingOrderPUT } from 'inflow-api-types/manufacturing-orders';
-import { StockTransferGET, StockTransferPUT } from 'inflow-api-types/stock-transfers';
-import { StockAdjustmentGET, StockAdjustmentPUT } from 'inflow-api-types/stock-adjustments';
-import { ProductCostAdjustmentGET, ProductCostAdjustmentPUT } from 'inflow-api-types/product-cost-adjustments';
-import { StockCountGET, StockCountPUT } from 'inflow-api-types/stock-counts';
-import { CountSheetGET, CountSheetPUT } from 'inflow-api-types/count-sheets';
-import { StockroomScanGET, StockroomScanPUT } from 'inflow-api-types/stockroom-scans';
-import { StockroomUserGET } from 'inflow-api-types/stockroom-users';
-import { CustomFieldDefinitionGET } from 'inflow-api-types/custom-field-definitions';
-import { WebhookGET, WebhookPUT } from 'inflow-api-types/webhooks';
+// Check available includes
+console.log(ProductIncludes);
+// {
+//   inventoryLines: { description: '...', adds: ['inventoryLines', 'totalQuantityOnHand'] },
+//   prices: { description: '...', adds: ['prices'] },
+//   vendorItems: { description: '...', adds: ['vendorItems'] },
+//   ...
+// }
 
-// Reference entities (read-only lookups)
-import {
-  CategoryGET, LocationGET, CurrencyGET, PricingSchemeGET,
-  PaymentTermsGET, TaxCodeGET, TaxingSchemeGET, OperationTypeGET,
-  AdjustmentReasonGET, TeamMemberGET, UnitOfMeasureSchema
-} from 'inflow-api-types/reference';
-
-// Primitives
-import { uuid, decimal, rowversion } from 'inflow-api-types/primitives';
+// Fetch with includes
+const response = await fetch(
+  `${BASE_URL}/products?include=inventoryLines,prices`,
+  { headers }
+);
+const products = ProductGET.array().parse(await response.json());
 ```
 
-## Schema Naming Convention
+### Working with Filters
 
-Each entity exports:
+```javascript
+import { ProductFilters } from 'inflow-api-types/products';
 
-- `{Entity}GET` - Response schema from GET endpoints
-- `{Entity}PUT` - Request schema for PUT endpoints (where applicable)
-- `{Entity}Includes` - Available `?include=` query options
-- `{Entity}Filters` - Available `?filter[x]=` query options
-- `{Entity}Constraints` - Read-only, immutable, and required fields
+// Check available filters
+console.log(ProductFilters);
+// {
+//   name: { type: 'string', description: 'Filter by name' },
+//   isActive: { type: 'boolean', description: 'Filter by active status' },
+//   smart: { type: 'string', description: 'Smart search across multiple fields' },
+//   ...
+// }
+
+// Fetch with filters
+const response = await fetch(
+  `${BASE_URL}/products?filter[isActive]=true&filter[smart]=widget`,
+  { headers }
+);
+```
+
+### Checking Constraints Before PUT
+
+```javascript
+import { ProductPUT, ProductConstraints } from 'inflow-api-types/products';
+
+// See what's read-only (don't send these on PUT)
+console.log(ProductConstraints.readOnly);
+// ['lastModifiedDateTime', 'lastModifiedById', 'totalQuantityOnHand', 'cost', ...]
+
+// See what's required for create vs update
+console.log(ProductConstraints.required);
+// { create: ['productId', 'name', 'itemType'], update: ['productId'] }
+
+// See what can't change after creation
+console.log(ProductConstraints.immutable);
+// ['itemType', 'trackSerials']
+```
+
+### TypeScript Type Inference
+
+```typescript
+import { z } from 'zod';
+import { ProductGET, ProductPUT } from 'inflow-api-types/products';
+
+// Infer types from schemas
+type Product = z.infer<typeof ProductGET>;
+type ProductInput = z.infer<typeof ProductPUT>;
+
+// Use in functions
+function processProduct(product: Product) {
+  console.log(product.name, product.sku);
+}
+
+async function createProduct(input: ProductInput) {
+  const validated = ProductPUT.parse(input);
+  // ... send to API
+}
+```
+
+### Error Handling
+
+```javascript
+import { ProductGET } from 'inflow-api-types/products';
+import { ZodError } from 'zod';
+
+try {
+  const product = ProductGET.parse(apiResponse);
+} catch (error) {
+  if (error instanceof ZodError) {
+    // Schema validation failed
+    console.error('Validation errors:', error.errors);
+    // [{ path: ['name'], message: 'Required', code: 'invalid_type' }]
+  } else {
+    throw error;
+  }
+}
+```
+
+### Building an API Client
+
+```javascript
+import { z } from 'zod';
+import {
+  ProductGET,
+  ProductPUT,
+  ProductIncludes,
+} from 'inflow-api-types/products';
+
+class InflowClient {
+  constructor(apiKey, companyId) {
+    this.baseUrl = `https://cloudapi.inflowinventory.com/${companyId}`;
+    this.headers = {
+      Authorization: `Bearer ${apiKey}`,
+      Accept: 'application/json;version=2025-06-24',
+      'Content-Type': 'application/json',
+    };
+  }
+
+  async getProduct(id, includes = []) {
+    const url = new URL(`${this.baseUrl}/products/${id}`);
+    if (includes.length) {
+      url.searchParams.set('include', includes.join(','));
+    }
+    const res = await fetch(url, { headers: this.headers });
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
+    return ProductGET.parse(await res.json());
+  }
+
+  async upsertProduct(product) {
+    const payload = ProductPUT.parse(product);
+    const res = await fetch(`${this.baseUrl}/products`, {
+      method: 'PUT',
+      headers: this.headers,
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
+    return ProductGET.parse(await res.json());
+  }
+}
+```
+
+## API Reference
+
+| Setting | Value |
+|---------|-------|
+| Base URL | `https://cloudapi.inflowinventory.com/{companyId}` |
+| Auth | `Authorization: Bearer {API_KEY}` |
+| Version | `Accept: application/json;version=2025-06-24` |
+| Rate Limit | 60 requests/minute |
+
+## Known API vs Swagger Discrepancies
+
+The `swagger.json` included has known inaccuracies. These schemas reflect the **actual API behavior**:
+
+| Issue | swagger.json | Actual API |
+|-------|--------------|------------|
+| Enum casing | `StockedProduct` | `stockedProduct` |
+| Status values | `Open`, `InTransit` | `open`, `inTransit` |
+| Custom field types | `Text`, `Dropdown` | `text`, `dropdown` |
+| Decimal fields | `type: number` | Returns string `"19.99"` |
+| Image URLs | Not nullable | Can be `null` |
+| Undocumented fields | Missing | `trackLots`, `trackExpiry`, `lotId` |
+
+## Development
+
+```bash
+# Run all tests (requires INFLOW_API_KEY and INFLOW_COMPANY_ID env vars)
+npm test
+
+# Run specific entity tests
+npm run test:products
+npm run test:vendors
+```
 
 ## Documentation
 
-See [CLAUDE.md](./CLAUDE.md) for detailed development documentation, roadmap, and lessons learned.
+See [CLAUDE.md](./CLAUDE.md) for:
+- Complete entity roadmap
+- Field-by-field schema documentation
+- Lessons learned from API testing
+- Development process
 
 ## License
 

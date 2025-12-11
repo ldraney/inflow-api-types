@@ -54,3 +54,6 @@ export * from './stockroom-scans/index.js';
 
 // StockroomUsers
 export * from './stockroom-users/index.js';
+
+// ProductSummary (Reporting)
+export * from './product-summary/index.js';
