@@ -1,6 +1,6 @@
 {
   "name": "inflow-api-types",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Zod schema library for the Inflow Inventory API",
   "author": "ldraney",
   "repository": {
@@ -8,31 +8,97 @@
     "url": "https://github.com/ldraney/inflow-api-types.git"
   },
   "type": "module",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./index.js",
-    "./products": "./products/index.js",
-    "./vendors": "./vendors/index.js",
-    "./customers": "./customers/index.js",
-    "./purchase-orders": "./purchase-orders/index.js",
-    "./sales-orders": "./sales-orders/index.js",
-    "./manufacturing-orders": "./manufacturing-orders/index.js",
-    "./stock-transfers": "./stock-transfers/index.js",
-    "./stock-adjustments": "./stock-adjustments/index.js",
-    "./product-cost-adjustments": "./product-cost-adjustments/index.js",
-    "./reference": "./reference/index.js",
-    "./custom-field-definitions": "./custom-field-definitions/index.js",
-    "./custom-field-dropdown-options": "./custom-field-dropdown-options/index.js",
-    "./custom-fields": "./custom-fields/index.js",
-    "./webhooks": "./webhooks/index.js",
-    "./stock-counts": "./stock-counts/index.js",
-    "./count-sheets": "./count-sheets/index.js",
-    "./stockroom-scans": "./stockroom-scans/index.js",
-    "./stockroom-users": "./stockroom-users/index.js",
-    "./product-summary": "./product-summary/index.js",
-    "./primitives": "./primitives.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./products": {
+      "types": "./dist/products/index.d.ts",
+      "import": "./dist/products/index.js"
+    },
+    "./vendors": {
+      "types": "./dist/vendors/index.d.ts",
+      "import": "./dist/vendors/index.js"
+    },
+    "./customers": {
+      "types": "./dist/customers/index.d.ts",
+      "import": "./dist/customers/index.js"
+    },
+    "./purchase-orders": {
+      "types": "./dist/purchase-orders/index.d.ts",
+      "import": "./dist/purchase-orders/index.js"
+    },
+    "./sales-orders": {
+      "types": "./dist/sales-orders/index.d.ts",
+      "import": "./dist/sales-orders/index.js"
+    },
+    "./manufacturing-orders": {
+      "types": "./dist/manufacturing-orders/index.d.ts",
+      "import": "./dist/manufacturing-orders/index.js"
+    },
+    "./stock-transfers": {
+      "types": "./dist/stock-transfers/index.d.ts",
+      "import": "./dist/stock-transfers/index.js"
+    },
+    "./stock-adjustments": {
+      "types": "./dist/stock-adjustments/index.d.ts",
+      "import": "./dist/stock-adjustments/index.js"
+    },
+    "./product-cost-adjustments": {
+      "types": "./dist/product-cost-adjustments/index.d.ts",
+      "import": "./dist/product-cost-adjustments/index.js"
+    },
+    "./reference": {
+      "types": "./dist/reference/index.d.ts",
+      "import": "./dist/reference/index.js"
+    },
+    "./custom-field-definitions": {
+      "types": "./dist/custom-field-definitions/index.d.ts",
+      "import": "./dist/custom-field-definitions/index.js"
+    },
+    "./custom-field-dropdown-options": {
+      "types": "./dist/custom-field-dropdown-options/index.d.ts",
+      "import": "./dist/custom-field-dropdown-options/index.js"
+    },
+    "./custom-fields": {
+      "types": "./dist/custom-fields/index.d.ts",
+      "import": "./dist/custom-fields/index.js"
+    },
+    "./webhooks": {
+      "types": "./dist/webhooks/index.d.ts",
+      "import": "./dist/webhooks/index.js"
+    },
+    "./stock-counts": {
+      "types": "./dist/stock-counts/index.d.ts",
+      "import": "./dist/stock-counts/index.js"
+    },
+    "./count-sheets": {
+      "types": "./dist/count-sheets/index.d.ts",
+      "import": "./dist/count-sheets/index.js"
+    },
+    "./stockroom-scans": {
+      "types": "./dist/stockroom-scans/index.d.ts",
+      "import": "./dist/stockroom-scans/index.js"
+    },
+    "./stockroom-users": {
+      "types": "./dist/stockroom-users/index.d.ts",
+      "import": "./dist/stockroom-users/index.js"
+    },
+    "./product-summary": {
+      "types": "./dist/product-summary/index.d.ts",
+      "import": "./dist/product-summary/index.js"
+    },
+    "./primitives": {
+      "types": "./dist/primitives.d.ts",
+      "import": "./dist/primitives.js"
+    }
   },
   "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
     "test": "node tests/products.test.js && node tests/vendors.test.js && node tests/customers.test.js && node tests/purchase-orders.test.js && node tests/sales-orders.test.js && node tests/manufacturing-orders.test.js && node tests/stock-transfers.test.js && node tests/stock-adjustments.test.js && node tests/product-cost-adjustments.test.js && node tests/reference.test.js && node tests/custom-field-definitions.test.js && node tests/custom-fields.test.js && node tests/webhooks.test.js && node tests/stock-counts.test.js && node tests/stockroom.test.js && node tests/product-summary.test.js",
     "test:products": "node tests/products.test.js",
     "test:vendors": "node tests/vendors.test.js",
@@ -51,8 +117,14 @@
     "test:stockroom": "node tests/stockroom.test.js",
     "test:product-summary": "node tests/product-summary.test.js"
   },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
   },
   "keywords": [
     "inflow",
@@ -60,7 +132,8 @@
     "api",
     "zod",
     "validation",
-    "schema"
+    "schema",
+    "typescript"
   ],
   "license": "MIT"
 }

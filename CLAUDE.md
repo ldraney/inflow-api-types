@@ -1,6 +1,11 @@
 # inflow-api-types
 
-Zod schema library for the Inflow Inventory API. One job: map `swagger.json` → typed, validated, importable Zod schemas.
+**Public npm package** providing Zod schemas for the Inflow Inventory API. One job: map `swagger.json` → typed, validated, importable Zod schemas.
+
+This package is designed to be:
+- Published to npm for easy `npm install inflow-api-types`
+- Used as a dependency by `inflow-client` (typed HTTP client)
+- Consumed by any TypeScript/JavaScript project needing Inflow API types
 
 ## Purpose
 
@@ -19,25 +24,15 @@ const product = ProductGET.parse(await api.get('/products/123'));
 
 ## Installation
 
-**No build step required.** Pure JavaScript with Zod - install and use immediately.
-
 ```bash
-# Install from GitHub (recommended: pin to version)
-npm install github:ldraney/inflow-api-types#v1.0.0
+# From npm (preferred once published)
+npm install inflow-api-types
 
-# Or latest from master
-npm install github:ldraney/inflow-api-types
+# From GitHub (current, until npm publish)
+npm install github:ldraney/inflow-api-types#v1.1.0
 ```
 
-Or add to `package.json`:
-
-```json
-{
-  "dependencies": {
-    "inflow-api-types": "github:ldraney/inflow-api-types#v1.0.0"
-  }
-}
-```
+Requires `npm run build` after cloning for development.
 
 ## Source of Truth
 
@@ -47,22 +42,20 @@ Or add to `package.json`:
 
 ```
 inflow-api-types/
-├── index.js              # Re-exports everything
-├── primitives.js         # uuid, decimal, rowversion, shared types
-├── products/
-│   ├── index.js          # Re-exports get.js, put.js
-│   ├── get.js            # ProductGET schema, includes, filters
-│   └── put.js            # ProductPUT schema, constraints
-├── vendors/
-├── customers/
-├── purchase-orders/
-├── sales-orders/
-├── manufacturing-orders/
-├── stock-transfers/
-├── stock-adjustments/
-├── product-cost-adjustments/
-├── reference/            # Category, Location, Currency, etc.
+├── src/                  # TypeScript source
+│   ├── index.ts          # Re-exports everything
+│   ├── primitives.ts     # uuid, decimal, rowversion, shared types
+│   ├── products/
+│   │   ├── index.ts      # Re-exports get.ts, put.ts
+│   │   ├── get.ts        # ProductGET schema, includes, filters
+│   │   └── put.ts        # ProductPUT schema, constraints
+│   ├── vendors/
+│   ├── customers/
+│   └── ...
+├── dist/                 # Built output (JS + .d.ts declarations)
 ├── swagger.json          # Source (do not edit)
+├── tsconfig.json
+├── package.json
 └── CLAUDE.md
 ```
 
@@ -83,10 +76,10 @@ For each entity:
 
 ### File Format
 
-```javascript
-// products/get.js
+```typescript
+// src/products/get.ts
 import { z } from 'zod';
-import { uuid, decimal, rowversion } from '../primitives.js';
+import { uuid, decimal, rowversion } from '../primitives';
 
 /**
  * Product GET response schema
@@ -121,10 +114,10 @@ export const ProductFilters = {
 };
 ```
 
-```javascript
-// products/put.js
+```typescript
+// src/products/put.ts
 import { z } from 'zod';
-import { uuid, decimal, rowversion } from '../primitives.js';
+import { uuid, decimal, rowversion } from '../primitives';
 
 /**
  * Product PUT request schema
