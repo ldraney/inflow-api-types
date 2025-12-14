@@ -44,10 +44,13 @@ export const PercentOrFixedAmount = z.object({
 
 /**
  * Quantity with unit of measure
+ * Note: swagger.json documents 'quantity' and 'uomName' but API returns different fields
  */
 export const QuantityWithUom = z.object({
-  quantity: decimal.optional(),
-  uomName: z.string().optional(),
+  standardQuantity: decimal.optional(),
+  uomQuantity: decimal.optional(),
+  uom: z.string().optional(),
+  serialNumbers: z.array(z.string()).optional(),
 }).optional();
 
 /**
