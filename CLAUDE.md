@@ -25,14 +25,10 @@ const product = ProductGET.parse(await api.get('/products/123'));
 ## Installation
 
 ```bash
-# From npm (preferred once published)
 npm install inflow-api-types
-
-# From GitHub (current, until npm publish)
-npm install github:ldraney/inflow-api-types#v1.1.0
 ```
 
-Requires `npm run build` after cloning for development.
+For development: clone repo and run `npm run build`.
 
 ## Source of Truth
 
