@@ -1,6 +1,20 @@
 # inflow-api-types
 
-Zod schema library for the [Inflow Inventory API](https://www.inflowinventory.com/). Provides typed, validated, importable schemas for all 29 API entities.
+**TypeScript types for the [Inflow Inventory API](https://www.inflowinventory.com/) that are actually correct.**
+
+Types derived from OpenAPI spec, then validated against the live API with corrections for documented inaccuracies. Every schema has been integration-tested - these types reflect what the API *actually* returns, not what `swagger.json` claims.
+
+## Why This Exists
+
+Inflow's `swagger.json` has inaccuracies: wrong enum casing, missing fields, incorrect nullability. Auto-generated types from that spec would be silently wrong.
+
+This package uses Zod schemas + integration tests to discover the truth:
+1. Write schema from swagger.json
+2. Run `.parse()` against live API response
+3. Test fails → fix schema to match reality
+4. Repeat for all 29 entities
+
+The result: **types you can trust**, with optional runtime validation if you want it.
 
 ## Installation
 
