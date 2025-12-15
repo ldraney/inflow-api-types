@@ -1,3 +1,3 @@
 // ManufacturingOrder module
-export * from './get';
-export * from './put';
+export * from './get.js';
+export * from './put.js';

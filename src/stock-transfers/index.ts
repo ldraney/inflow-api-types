@@ -7,7 +7,7 @@ export {
   StockTransferAttachmentSchema,
   StockTransferLineSchema,
   QuantityWithUomSchema,
-} from './get';
+} from './get.js';
 
 export {
   StockTransferPUT,
@@ -16,4 +16,4 @@ export {
   QuantityWithUomPUT,
   createStockTransferPayload,
   createStockTransferLines,
-} from './put';
+} from './put.js';

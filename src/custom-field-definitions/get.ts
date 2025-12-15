@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { uuid } from '../primitives';
-import { CategoryGET } from '../reference/index';
+import { uuid } from '../primitives.js';
+import { CategoryGET } from '../reference/index.js';
 
 /**
  * Custom field type enum

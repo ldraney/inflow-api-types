@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { uuid, decimal, decimalNullable, rowversion, dateTime } from '../primitives';
-import { AddressPUT } from '../vendors/put';
-import { PercentOrFixedAmount, QuantityWithUom } from '../purchase-orders/get';
+import { uuid, decimal, decimalNullable, rowversion, dateTime } from '../primitives.js';
+import { AddressPUT } from '../vendors/put.js';
+import { PercentOrFixedAmount, QuantityWithUom } from '../purchase-orders/get.js';
 
 // ============================================================================
 // Nested Schemas for PUT requests

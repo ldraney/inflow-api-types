@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { uuid, decimal, decimalNullable, rowversion, dateTime } from '../primitives';
-import { QuantityWithUom } from '../purchase-orders/get';
+import { uuid, decimal, decimalNullable, rowversion, dateTime } from '../primitives.js';
+import { QuantityWithUom } from '../purchase-orders/get.js';
 // ============================================================================
 // Nested Schemas for PUT requests
 // ============================================================================

@@ -11,7 +11,7 @@ export {
   VendorCreditSchema,
   VendorDueSchema,
   VendorItemSchema,
-} from './get';
+} from './get.js';
 
 export {
   VendorPUT,
@@ -21,4 +21,4 @@ export {
   VendorItemPUT,
   createVendorPayload,
   createNestedItems,
-} from './put';
+} from './put.js';

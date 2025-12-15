@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { uuid, decimal, decimalNullable, rowversion, dateTime, int32, int64 } from '../primitives';
-import { QuantityWithUom } from '../purchase-orders/get';
+import { uuid, decimal, decimalNullable, rowversion, dateTime, int32, int64 } from '../primitives.js';
+import { QuantityWithUom } from '../purchase-orders/get.js';
 
 // ============================================================================
 // Enums

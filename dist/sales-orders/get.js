@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { uuid, decimal, decimalNullable, rowversion, dateTime, int32, int64 } from '../primitives';
-import { AddressSchema } from '../vendors/get';
-import { PercentOrFixedAmount, QuantityWithUom, PaymentType } from '../purchase-orders/get';
+import { uuid, decimal, decimalNullable, rowversion, dateTime, int32, int64 } from '../primitives.js';
+import { AddressSchema } from '../vendors/get.js';
+import { PercentOrFixedAmount, QuantityWithUom, PaymentType } from '../purchase-orders/get.js';
 // ============================================================================
 // Enums
 // ============================================================================

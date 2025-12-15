@@ -3,10 +3,10 @@ export {
   ProductCostAdjustmentGET,
   ProductCostAdjustmentIncludes,
   ProductCostAdjustmentFilters,
-} from './get';
+} from './get.js';
 
 export {
   ProductCostAdjustmentPUT,
   ProductCostAdjustmentConstraints,
   createProductCostAdjustmentPayload,
-} from './put';
+} from './put.js';

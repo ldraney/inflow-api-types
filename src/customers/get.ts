@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { uuid, decimal, decimalNullable, rowversion, dateTime, int64 } from '../primitives';
-import { AddressType, AddressSchema } from '../vendors/get';
+import { uuid, decimal, decimalNullable, rowversion, dateTime, int64 } from '../primitives.js';
+import { AddressType, AddressSchema } from '../vendors/get.js';
 
 // ============================================================================
 // Nested Schemas (for included relationships)

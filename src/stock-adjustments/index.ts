@@ -6,7 +6,7 @@ export {
   StockAdjustmentAttachmentSchema,
   StockAdjustmentLineSchema,
   StockAdjustmentQuantitySchema,
-} from './get';
+} from './get.js';
 
 export {
   StockAdjustmentPUT,
@@ -15,4 +15,4 @@ export {
   StockAdjustmentQuantityPUT,
   createStockAdjustmentPayload,
   createStockAdjustmentLines,
-} from './put';
+} from './put.js';

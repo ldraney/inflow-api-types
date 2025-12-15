@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { uuid } from '../primitives';
-import { CustomFieldType, CustomFieldEntityType, CustomFieldPropertyName } from './get';
+import { uuid } from '../primitives.js';
+import { CustomFieldType, CustomFieldEntityType, CustomFieldPropertyName } from './get.js';
 
 /**
  * CustomFieldDefinition PUT request schema

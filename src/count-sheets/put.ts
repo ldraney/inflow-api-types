@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { uuid, decimal, rowversion } from '../primitives';
+import { uuid, decimal, rowversion } from '../primitives.js';
 
 // ============================================================================
 // Nested Schemas for PUT requests

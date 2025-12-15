@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { uuid, decimal, decimalNullable, rowversion, dateTime, int32, int64, ItemType, ReorderMethod, PriceType } from '../primitives';
+import { uuid, decimal, decimalNullable, rowversion, dateTime, int32, int64, ItemType, ReorderMethod, PriceType } from '../primitives.js';
 
 // ============================================================================
 // Nested Schemas (for included relationships)

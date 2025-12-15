@@ -15,7 +15,7 @@ export {
   ReorderSettingsSchema,
   ProductTaxCodeSchema,
   ProductCostSchema,
-} from './get';
+} from './get.js';
 
 // Product PUT schemas and metadata
 export {
@@ -32,4 +32,4 @@ export {
   // Helpers
   createProductPayload,
   createNestedItems,
-} from './put';
+} from './put.js';

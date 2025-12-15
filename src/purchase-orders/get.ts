@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { uuid, decimal, decimalNullable, rowversion, dateTime, int64 } from '../primitives';
-import { AddressSchema } from '../vendors/get';
+import { uuid, decimal, decimalNullable, rowversion, dateTime, int64 } from '../primitives.js';
+import { AddressSchema } from '../vendors/get.js';
 
 // ============================================================================
 // Enums

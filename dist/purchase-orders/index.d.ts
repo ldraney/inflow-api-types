@@ -1,3 +1,3 @@
-export { PurchaseOrderGET, PurchaseOrderIncludes, PurchaseOrderFilters, POInventoryStatus, POPaymentStatus, PaymentType, PercentOrFixedAmount, QuantityWithUom, POAttachmentSchema, PurchaseOrderLineSchema, PurchaseOrderReceiveLineSchema, PurchaseOrderUnstockLineSchema, PurchaseOrderPaymentLineSchema, } from './get';
-export { PurchaseOrderPUT, PurchaseOrderConstraints, PurchaseOrderLinePUT, PurchaseOrderReceiveLinePUT, PurchaseOrderUnstockLinePUT, createPurchaseOrderPayload, createOrderLines, createReceiveLines, } from './put';
+export { PurchaseOrderGET, PurchaseOrderIncludes, PurchaseOrderFilters, POInventoryStatus, POPaymentStatus, PaymentType, PercentOrFixedAmount, QuantityWithUom, POAttachmentSchema, PurchaseOrderLineSchema, PurchaseOrderReceiveLineSchema, PurchaseOrderUnstockLineSchema, PurchaseOrderPaymentLineSchema, } from './get.js';
+export { PurchaseOrderPUT, PurchaseOrderConstraints, PurchaseOrderLinePUT, PurchaseOrderReceiveLinePUT, PurchaseOrderUnstockLinePUT, createPurchaseOrderPayload, createOrderLines, createReceiveLines, } from './put.js';
 //# sourceMappingURL=index.d.ts.map

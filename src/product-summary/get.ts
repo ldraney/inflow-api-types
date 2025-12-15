@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { uuid, decimal, decimalNullable } from '../primitives';
+import { uuid, decimal, decimalNullable } from '../primitives.js';
 
 // ============================================================================
 // ProductSummary - Aggregated inventory data for a product

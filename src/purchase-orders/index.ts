@@ -13,7 +13,7 @@ export {
   PurchaseOrderReceiveLineSchema,
   PurchaseOrderUnstockLineSchema,
   PurchaseOrderPaymentLineSchema,
-} from './get';
+} from './get.js';
 
 export {
   PurchaseOrderPUT,
@@ -24,4 +24,4 @@ export {
   createPurchaseOrderPayload,
   createOrderLines,
   createReceiveLines,
-} from './put';
+} from './put.js';

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CustomFieldEntityType } from '../custom-field-definitions/get';
+import { CustomFieldEntityType } from '../custom-field-definitions/get.js';
 
 /**
  * CustomFieldDropdownOptions GET response schema

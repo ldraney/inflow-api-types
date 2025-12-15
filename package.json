@@ -1,6 +1,6 @@
 {
   "name": "inflow-api-types",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Zod schema library for the Inflow Inventory API",
   "author": "ldraney",
   "repository": {
@@ -124,6 +124,7 @@
     "zod": "^3.23.0"
   },
   "devDependencies": {
+    "inflow-client": "^0.2.0",
     "typescript": "^5.9.3"
   },
   "keywords": [

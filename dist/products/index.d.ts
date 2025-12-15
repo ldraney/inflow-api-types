@@ -1,3 +1,3 @@
-export { ProductGET, ProductIncludes, ProductFilters, ImageSchema, AttachmentSchema, InventoryLineSchema, ProductPriceSchema, ProductBarcodeSchema, VendorItemSchema, ItemBomSchema, ProductOperationSchema, ReorderSettingsSchema, ProductTaxCodeSchema, ProductCostSchema, } from './get';
-export { ProductPUT, ProductConstraints, ProductPricePUT, ProductBarcodePUT, VendorItemPUT, ItemBomPUT, ProductOperationPUT, ReorderSettingsPUT, ProductTaxCodePUT, createProductPayload, createNestedItems, } from './put';
+export { ProductGET, ProductIncludes, ProductFilters, ImageSchema, AttachmentSchema, InventoryLineSchema, ProductPriceSchema, ProductBarcodeSchema, VendorItemSchema, ItemBomSchema, ProductOperationSchema, ReorderSettingsSchema, ProductTaxCodeSchema, ProductCostSchema, } from './get.js';
+export { ProductPUT, ProductConstraints, ProductPricePUT, ProductBarcodePUT, VendorItemPUT, ItemBomPUT, ProductOperationPUT, ReorderSettingsPUT, ProductTaxCodePUT, createProductPayload, createNestedItems, } from './put.js';
 //# sourceMappingURL=index.d.ts.map

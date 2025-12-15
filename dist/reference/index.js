@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { uuid, decimal, rowversion, int32 } from '../primitives';
+import { uuid, decimal, rowversion, int32 } from '../primitives.js';
 // ============================================================================
 // Category
 // Endpoints: GET /{companyId}/categories/{categoryId}

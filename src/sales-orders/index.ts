@@ -14,7 +14,7 @@ export {
   SalesOrderRestockLineSchema,
   SalesOrderPaymentLineSchema,
   SalesOrderCostOfGoodsSoldSchema,
-} from './get';
+} from './get.js';
 
 export {
   SalesOrderPUT,
@@ -27,4 +27,4 @@ export {
   createSalesOrderPayload,
   createOrderLines,
   createPickLines,
-} from './put';
+} from './put.js';

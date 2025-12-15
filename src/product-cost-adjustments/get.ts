@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { uuid, decimal, rowversion, dateTime } from '../primitives';
+import { uuid, decimal, rowversion, dateTime } from '../primitives.js';
 
 // ============================================================================
 // Main ProductCostAdjustment GET Schema

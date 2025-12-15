@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { uuid } from '../primitives';
+import { uuid } from '../primitives.js';
 
 /**
  * Valid webhook event types

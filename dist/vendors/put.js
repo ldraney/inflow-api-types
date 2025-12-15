@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { uuid, decimal, decimalNullable, rowversion, int32 } from '../primitives';
-import { AddressType } from './get';
+import { uuid, decimal, decimalNullable, rowversion, int32 } from '../primitives.js';
+import { AddressType } from './get.js';
 // ============================================================================
 // Nested Schemas for PUT requests
 // ============================================================================

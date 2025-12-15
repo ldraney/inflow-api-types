@@ -9,7 +9,7 @@ export {
   CustomerCreditSchema,
   CustomerDueSchema,
   CustomerOrderHistorySchema,
-} from './get';
+} from './get.js';
 
 export {
   CustomerPUT,
@@ -17,4 +17,4 @@ export {
   CustomerAddressPUT,
   createCustomerPayload,
   createNestedItems,
-} from './put';
+} from './put.js';

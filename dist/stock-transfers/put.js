@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { uuid, decimal, rowversion } from '../primitives';
-import { StockTransferStatus } from './get';
+import { uuid, decimal, rowversion } from '../primitives.js';
+import { StockTransferStatus } from './get.js';
 // ============================================================================
 // Nested Schemas for PUT requests
 // ============================================================================
