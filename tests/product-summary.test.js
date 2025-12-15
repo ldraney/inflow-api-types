@@ -8,7 +8,7 @@
  */
 
 import { apiGet, apiPost, validateSchema, runTest } from './api.js';
-import { ProductSummaryGET, ProductSummaryKey } from '../product-summary/index.js';
+import { ProductSummaryGET, ProductSummaryKey } from '../dist/product-summary/index.js';
 import { z } from 'zod';
 
 // Schema for array of product summaries

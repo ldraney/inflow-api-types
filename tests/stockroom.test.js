@@ -12,8 +12,8 @@
  */
 
 import { apiGet, validateSchema, runTest } from './api.js';
-import { StockroomScanGET, StockroomScanFilters } from '../stockroom-scans/index.js';
-import { StockroomUserGET, StockroomUserFilters } from '../stockroom-users/index.js';
+import { StockroomScanGET, StockroomScanFilters } from '../dist/stockroom-scans/index.js';
+import { StockroomUserGET, StockroomUserFilters } from '../dist/stockroom-users/index.js';
 import { z } from 'zod';
 
 // Schema for arrays

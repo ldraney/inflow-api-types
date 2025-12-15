@@ -8,8 +8,8 @@
  */
 
 import { apiGet, validateSchema, runTest } from './api.js';
-import { StockCountGET, StockCountIncludes } from '../stock-counts/index.js';
-import { CountSheetGET, CountSheetIncludes } from '../count-sheets/index.js';
+import { StockCountGET, StockCountIncludes } from '../dist/stock-counts/index.js';
+import { CountSheetGET, CountSheetIncludes } from '../dist/count-sheets/index.js';
 import { z } from 'zod';
 
 // Schema for array of stock counts

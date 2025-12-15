@@ -5,7 +5,7 @@
  */
 
 import { apiGet, validateSchema, runTest } from './api.js';
-import { WebhookGET } from '../webhooks/index.js';
+import { WebhookGET } from '../dist/webhooks/index.js';
 import { z } from 'zod';
 
 async function main() {

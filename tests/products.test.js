@@ -8,7 +8,7 @@
  */
 
 import { apiGet, validateSchema, runTest } from './api.js';
-import { ProductGET, ProductIncludes } from '../products/index.js';
+import { ProductGET, ProductIncludes } from '../dist/products/index.js';
 import { z } from 'zod';
 
 // Schema for array of products

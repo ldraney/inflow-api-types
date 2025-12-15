@@ -5,7 +5,7 @@
  */
 
 import { apiGet, validateSchema, runTest } from './api.js';
-import { CustomFieldsGET } from '../custom-fields/index.js';
+import { CustomFieldsGET } from '../dist/custom-fields/index.js';
 
 async function main() {
   console.log('='.repeat(60));

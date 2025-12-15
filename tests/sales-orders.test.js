@@ -5,7 +5,7 @@
  */
 
 import { apiGet, validateSchema, runTest } from './api.js';
-import { SalesOrderGET, SalesOrderIncludes } from '../sales-orders/index.js';
+import { SalesOrderGET, SalesOrderIncludes } from '../dist/sales-orders/index.js';
 import { z } from 'zod';
 
 // Schema for array of sales orders

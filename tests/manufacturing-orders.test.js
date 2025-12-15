@@ -5,7 +5,7 @@
  */
 
 import { apiGet, validateSchema, runTest } from './api.js';
-import { ManufacturingOrderGET, ManufacturingOrderListGET, ManufacturingOrderIncludes } from '../manufacturing-orders/index.js';
+import { ManufacturingOrderGET, ManufacturingOrderListGET, ManufacturingOrderIncludes } from '../dist/manufacturing-orders/index.js';
 
 async function main() {
   console.log('='.repeat(60));

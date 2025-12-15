@@ -1,13 +1,22 @@
 /**
  * Inflow API test utilities
  *
+ * Uses inflow-client for HTTP with rate limiting.
+ * Provides nice include/filter syntax and test helpers.
+ *
  * Requires environment variables:
  *   INFLOW_API_KEY - Your API key
  *   INFLOW_COMPANY_ID - Your company UUID
  */
 
+import { createClient } from 'inflow-client';
+
 const BASE_URL = 'https://cloudapi.inflowinventory.com';
 const API_VERSION = '2025-06-24';
+const RATE_LIMIT_DELAY = 1200; // Match inflow-client's rate limiting
+
+// Lazy-initialized client
+let client = null;
 
 export function getConfig() {
   const apiKey = process.env.INFLOW_API_KEY;
@@ -23,88 +32,75 @@ export function getConfig() {
   return { apiKey, companyId };
 }
 
-/**
- * Make a GET request to the Inflow API
- */
-export async function apiGet(path, options = {}) {
-  const { apiKey, companyId } = getConfig();
-  const { include, filter, query } = options;
+function getClient() {
+  if (!client) {
+    client = createClient(getConfig());
+  }
+  return client;
+}
 
-  let url = `${BASE_URL}/${companyId}${path}`;
-  const params = new URLSearchParams();
+/**
+ * Transform nice include/filter/query options to flat query params
+ */
+function buildParams(options = {}) {
+  const { include, filter, query } = options;
+  const params = {};
 
   if (include) {
-    params.set('include', Array.isArray(include) ? include.join(',') : include);
+    params.include = Array.isArray(include) ? include.join(',') : include;
   }
 
   if (filter) {
     for (const [key, value] of Object.entries(filter)) {
-      params.set(`filter[${key}]`, typeof value === 'object' ? JSON.stringify(value) : value);
+      params[`filter[${key}]`] = typeof value === 'object' ? JSON.stringify(value) : value;
     }
   }
 
-  // Support arbitrary query params (like locationId for product summary)
   if (query) {
     for (const [key, value] of Object.entries(query)) {
       if (value !== undefined && value !== null) {
-        params.set(key, value);
+        params[key] = value;
       }
     }
   }
 
-  const queryString = params.toString();
-  if (queryString) {
-    url += `?${queryString}`;
-  }
+  return params;
+}
 
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Accept': `application/json;version=${API_VERSION}`,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`API error ${response.status}: ${text}`);
-  }
-
-  return response.json();
+/**
+ * Make a GET request to the Inflow API
+ * Uses inflow-client with built-in rate limiting
+ */
+export async function apiGet(path, options = {}) {
+  const params = buildParams(options);
+  return getClient().get(path, params);
 }
 
 /**
  * Make a PUT request to the Inflow API
+ * Uses inflow-client with built-in rate limiting
  */
 export async function apiPut(path, body) {
-  const { apiKey, companyId } = getConfig();
-
-  const url = `${BASE_URL}/${companyId}${path}`;
-
-  const response = await fetch(url, {
-    method: 'PUT',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Accept': `application/json;version=${API_VERSION}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`API error ${response.status}: ${text}`);
-  }
-
-  return response.json();
+  return getClient().put(path, body);
 }
+
+// Rate limiting for POST (inflow-client doesn't have POST)
+let lastPostTime = 0;
 
 /**
  * Make a POST request to the Inflow API
+ * Implements own rate limiting since inflow-client doesn't support POST
  */
 export async function apiPost(path, body) {
   const { apiKey, companyId } = getConfig();
+
+  // Rate limiting
+  const now = Date.now();
+  const elapsed = now - lastPostTime;
+  if (elapsed < RATE_LIMIT_DELAY) {
+    await new Promise(resolve => setTimeout(resolve, RATE_LIMIT_DELAY - elapsed));
+  }
+  lastPostTime = Date.now();
 
   const url = `${BASE_URL}/${companyId}${path}`;
 

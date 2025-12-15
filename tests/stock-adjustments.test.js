@@ -8,7 +8,7 @@
  */
 
 import { apiGet, validateSchema, runTest } from './api.js';
-import { StockAdjustmentGET, StockAdjustmentIncludes } from '../stock-adjustments/index.js';
+import { StockAdjustmentGET, StockAdjustmentIncludes } from '../dist/stock-adjustments/index.js';
 import { z } from 'zod';
 
 // Schema for array of stock adjustments

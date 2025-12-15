@@ -8,7 +8,7 @@
  */
 
 import { apiGet, validateSchema, runTest } from './api.js';
-import { CustomerGET, CustomerIncludes } from '../customers/index.js';
+import { CustomerGET, CustomerIncludes } from '../dist/customers/index.js';
 import { z } from 'zod';
 
 // Schema for array of customers

@@ -9,10 +9,10 @@ import {
   CustomFieldDefinitionGET,
   CustomFieldType,
   CustomFieldEntityType,
-} from '../custom-field-definitions/index.js';
+} from '../dist/custom-field-definitions/index.js';
 import {
   CustomFieldDropdownOptionsGET,
-} from '../custom-field-dropdown-options/index.js';
+} from '../dist/custom-field-dropdown-options/index.js';
 import { z } from 'zod';
 
 async function main() {

@@ -8,7 +8,7 @@
  */
 
 import { apiGet, validateSchema, runTest } from './api.js';
-import { StockTransferGET, StockTransferIncludes } from '../stock-transfers/index.js';
+import { StockTransferGET, StockTransferIncludes } from '../dist/stock-transfers/index.js';
 import { z } from 'zod';
 
 // Schema for array of stock transfers

@@ -8,7 +8,7 @@
  */
 
 import { apiGet, validateSchema, runTest } from './api.js';
-import { VendorGET, VendorIncludes } from '../vendors/index.js';
+import { VendorGET, VendorIncludes } from '../dist/vendors/index.js';
 import { z } from 'zod';
 
 // Schema for array of vendors

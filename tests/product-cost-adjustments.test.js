@@ -8,7 +8,7 @@
  */
 
 import { apiGet, validateSchema, runTest } from './api.js';
-import { ProductCostAdjustmentGET, ProductCostAdjustmentIncludes } from '../product-cost-adjustments/index.js';
+import { ProductCostAdjustmentGET, ProductCostAdjustmentIncludes } from '../dist/product-cost-adjustments/index.js';
 import { z } from 'zod';
 
 // Schema for array of product cost adjustments

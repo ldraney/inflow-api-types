@@ -16,7 +16,7 @@ import {
   OperationTypeGET,
   AdjustmentReasonGET,
   TeamMemberGET,
-} from '../reference/index.js';
+} from '../dist/reference/index.js';
 import { z } from 'zod';
 
 async function main() {

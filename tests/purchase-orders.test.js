@@ -5,7 +5,7 @@
  */
 
 import { apiGet, validateSchema, runTest } from './api.js';
-import { PurchaseOrderGET, PurchaseOrderIncludes } from '../purchase-orders/index.js';
+import { PurchaseOrderGET, PurchaseOrderIncludes } from '../dist/purchase-orders/index.js';
 import { z } from 'zod';
 
 // Schema for array of purchase orders
