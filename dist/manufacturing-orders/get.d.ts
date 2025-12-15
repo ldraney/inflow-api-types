@@ -331,7 +331,7 @@ export declare const ManufacturingOrderGET: z.ZodObject<{
         productId?: string;
         name?: string;
     }>>>;
-    locationId: z.ZodOptional<z.ZodString>;
+    locationId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     location: z.ZodOptional<z.ZodNullable<z.ZodObject<{
         locationId: z.ZodOptional<z.ZodString>;
         name: z.ZodOptional<z.ZodString>;
@@ -873,7 +873,7 @@ export declare const ManufacturingOrderListGET: z.ZodArray<z.ZodObject<{
         productId?: string;
         name?: string;
     }>>>;
-    locationId: z.ZodOptional<z.ZodString>;
+    locationId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     location: z.ZodOptional<z.ZodNullable<z.ZodObject<{
         locationId: z.ZodOptional<z.ZodString>;
         name: z.ZodOptional<z.ZodString>;

@@ -163,7 +163,7 @@ export const ManufacturingOrderGET = z.object({
   }).nullable().optional(),
 
   // Location
-  locationId: uuid.optional(),
+  locationId: uuid.nullable().optional(),
   location: z.object({
     locationId: uuid.optional(),
     name: z.string().optional(),
