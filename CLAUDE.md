@@ -249,6 +249,26 @@ The swagger.json documentation has inaccuracies. Always test against the live AP
 | customFields include | listed as valid | Not valid for stockTransfers, stockAdjustments |
 | ProductSummary quantities | `type: number, format: double` | Decimal strings like `"0.00000"` |
 
+### Field Naming Inconsistencies
+
+The API uses inconsistent field names across entities. Consumers must handle these differences.
+
+| Field Purpose | Entities | Field Name |
+|---------------|----------|------------|
+| Last modified timestamp | Product | `lastModifiedDateTime` |
+| Last modified timestamp | Vendor, Customer | `lastModifiedDttm` |
+| Last modified timestamp | SalesOrder, PurchaseOrder, StockTransfer, StockAdjustment, StockCount, ManufacturingOrder, ProductCostAdjustment | *(none - only `lastModifiedById`)* |
+| Last modified user ID | All entities | `lastModifiedById` |
+| Last modified user object | All entities (via include) | `lastModifiedBy` |
+
+**Impact for consumers:** If you're building a unified data layer, you'll need to normalize these fields. Example:
+
+```typescript
+// Normalize lastModified timestamp across entities
+const getLastModified = (entity: any) =>
+  entity.lastModifiedDateTime ?? entity.lastModifiedDttm ?? null;
+```
+
 ### Pattern for Each Entity
 
 1. Read swagger.json schema section
