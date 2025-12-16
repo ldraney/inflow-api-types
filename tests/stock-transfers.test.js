@@ -7,8 +7,9 @@
  * real API responses from the Inflow API.
  */
 
-import { apiGet, validateSchema, runTest } from './api.js';
+import { apiGet, validateSchema, runTest, stripReadOnlyFields } from './api.js';
 import { StockTransferGET, StockTransferIncludes } from '../dist/stock-transfers/index.js';
+import { StockTransferPUT, StockTransferConstraints } from '../dist/stock-transfers/index.js';
 import { z } from 'zod';
 
 // Schema for array of stock transfers
@@ -173,6 +174,64 @@ async function main() {
     }
   });
   test7 ? passed++ : failed++;
+
+  // ============================================================================
+  // PUT Schema Validation Tests
+  // ============================================================================
+  console.log('\n' + '-'.repeat(60));
+  console.log('PUT Schema Validation (from GET responses)');
+  console.log('-'.repeat(60));
+
+  // Test 8: Validate PUT schema accepts stripped GET response
+  const test8 = await runTest('PUT schema - Single stock transfer from GET', async () => {
+    const list = await apiGet('/stock-transfers');
+    if (list.length === 0) {
+      console.log('  [SKIP] No stock transfers available');
+      return;
+    }
+
+    const stockTransferId = list[0].stockTransferId;
+    const transfer = await apiGet(`/stock-transfers/${stockTransferId}`);
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(transfer, StockTransferConstraints.readOnly);
+
+    const result = validateSchema(StockTransferPUT, payload, 'StockTransferPUT from GET response');
+
+    if (!result.success) {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  test8 ? passed++ : failed++;
+
+  // Test 9: Validate PUT schema with nested arrays (lines)
+  const test9 = await runTest('PUT schema - Stock transfer with lines', async () => {
+    const list = await apiGet('/stock-transfers', {
+      include: ['lines'],
+    });
+
+    if (list.length === 0) {
+      console.log('  [SKIP] No stock transfers available');
+      return;
+    }
+
+    // Find a transfer with lines
+    const transfer = list.find(t => t.lines?.length > 0) || list[0];
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(transfer, StockTransferConstraints.readOnly);
+
+    const result = validateSchema(StockTransferPUT, payload, 'StockTransferPUT with lines');
+
+    if (result.success && payload.lines?.length) {
+      console.log(`  Validated with: ${payload.lines.length} lines`);
+    } else if (!result.success) {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  test9 ? passed++ : failed++;
 
   // Summary
   console.log('\n' + '='.repeat(60));

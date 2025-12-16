@@ -154,3 +154,24 @@ export async function runTest(name, fn) {
   }
   return true;
 }
+
+/**
+ * Strip read-only fields from an object for PUT validation testing
+ *
+ * Takes a GET response and removes fields that cannot be sent in a PUT request.
+ * This allows testing that PUT schemas accept payloads derived from real GET responses.
+ *
+ * @param {object} obj - The object to strip fields from
+ * @param {string[]} readOnlyFields - Array of field names to remove
+ * @returns {object} - New object with read-only fields removed
+ */
+export function stripReadOnlyFields(obj, readOnlyFields) {
+  if (!obj || typeof obj !== 'object') return obj;
+
+  const result = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (readOnlyFields.includes(key)) continue;
+    result[key] = value;
+  }
+  return result;
+}

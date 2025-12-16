@@ -4,11 +4,15 @@
  * Run with: node tests/custom-field-definitions.test.js
  */
 
-import { apiGet, validateSchema, runTest } from './api.js';
+import { apiGet, validateSchema, runTest, stripReadOnlyFields } from './api.js';
 import {
   CustomFieldDefinitionGET,
   CustomFieldType,
   CustomFieldEntityType,
+} from '../dist/custom-field-definitions/index.js';
+import {
+  CustomFieldDefinitionPUT,
+  CustomFieldDefinitionConstraints,
 } from '../dist/custom-field-definitions/index.js';
 import {
   CustomFieldDropdownOptionsGET,
@@ -61,6 +65,32 @@ async function main() {
     }
   });
   testDropdownOptions ? passed++ : failed++;
+
+  // ============================================================================
+  // PUT Schema Validation Tests
+  // ============================================================================
+  console.log('\n' + '-'.repeat(60));
+  console.log('PUT Schema Validation (from GET responses)');
+  console.log('-'.repeat(60));
+
+  const testPUT = await runTest('PUT schema - Custom field definition from GET', async () => {
+    const data = await apiGet('/custom-field-definitions');
+    if (data.length === 0) {
+      console.log('  [SKIP] No custom field definitions available');
+      return;
+    }
+
+    // Strip read-only fields from first definition
+    const payload = stripReadOnlyFields(data[0], CustomFieldDefinitionConstraints.readOnly);
+
+    const result = validateSchema(CustomFieldDefinitionPUT, payload, 'CustomFieldDefinitionPUT from GET response');
+
+    if (!result.success) {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  testPUT ? passed++ : failed++;
 
   // ============================================================================
   // Summary

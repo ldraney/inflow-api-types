@@ -7,8 +7,9 @@
  * real API responses from the Inflow API.
  */
 
-import { apiGet, validateSchema, runTest } from './api.js';
+import { apiGet, validateSchema, runTest, stripReadOnlyFields } from './api.js';
 import { VendorGET, VendorIncludes } from '../dist/vendors/index.js';
+import { VendorPUT, VendorConstraints } from '../dist/vendors/index.js';
 import { z } from 'zod';
 
 // Schema for array of vendors
@@ -204,6 +205,73 @@ async function main() {
     }
   });
   test9 ? passed++ : failed++;
+
+  // ============================================================================
+  // PUT Schema Validation Tests
+  // ============================================================================
+  console.log('\n' + '-'.repeat(60));
+  console.log('PUT Schema Validation (from GET responses)');
+  console.log('-'.repeat(60));
+
+  // Test 10: Validate PUT schema accepts stripped GET response
+  const test10 = await runTest('PUT schema - Single vendor from GET', async () => {
+    const list = await apiGet('/vendors', { filter: { isActive: true } });
+    if (list.length === 0) {
+      console.log('  [SKIP] No vendors available');
+      return;
+    }
+
+    const vendorId = list[0].vendorId;
+    const vendor = await apiGet(`/vendors/${vendorId}`);
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(vendor, VendorConstraints.readOnly);
+
+    const result = validateSchema(VendorPUT, payload, 'VendorPUT from GET response');
+
+    if (!result.success) {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  test10 ? passed++ : failed++;
+
+  // Test 11: Validate PUT schema with nested arrays (addresses, vendorItems)
+  const test11 = await runTest('PUT schema - Vendor with nested arrays', async () => {
+    const list = await apiGet('/vendors', {
+      include: ['addresses', 'vendorItems'],
+      filter: { isActive: true },
+    });
+
+    if (list.length === 0) {
+      console.log('  [SKIP] No vendors available');
+      return;
+    }
+
+    // Find a vendor with some nested data
+    const vendor = list.find(v =>
+      (v.addresses?.length > 0) ||
+      (v.vendorItems?.length > 0)
+    ) || list[0];
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(vendor, VendorConstraints.readOnly);
+
+    const result = validateSchema(VendorPUT, payload, 'VendorPUT with nested arrays');
+
+    if (result.success) {
+      const nested = [];
+      if (payload.addresses?.length) nested.push(`${payload.addresses.length} addresses`);
+      if (payload.vendorItems?.length) nested.push(`${payload.vendorItems.length} vendorItems`);
+      if (nested.length > 0) {
+        console.log(`  Validated with: ${nested.join(', ')}`);
+      }
+    } else {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  test11 ? passed++ : failed++;
 
   // Summary
   console.log('\n' + '='.repeat(60));

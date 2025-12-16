@@ -11,8 +11,9 @@
  * mobile app is not being used.
  */
 
-import { apiGet, validateSchema, runTest } from './api.js';
+import { apiGet, validateSchema, runTest, stripReadOnlyFields } from './api.js';
 import { StockroomScanGET, StockroomScanFilters } from '../dist/stockroom-scans/index.js';
+import { StockroomScanPUT, StockroomScanConstraints } from '../dist/stockroom-scans/index.js';
 import { StockroomUserGET, StockroomUserFilters } from '../dist/stockroom-users/index.js';
 import { z } from 'zod';
 
@@ -105,6 +106,42 @@ async function main() {
     console.log(`  User attributes:`, Object.keys(data.attributes || {}));
   });
   test3 ? passed++ : failed++;
+
+  // =========================================================================
+  // PUT Schema Validation Tests
+  // =========================================================================
+  console.log('\n' + '-'.repeat(60));
+  console.log('PUT Schema Validation (from GET responses)');
+  console.log('-'.repeat(60));
+
+  // Test 4: Validate StockroomScan PUT schema
+  const test4 = await runTest('PUT schema - Stockroom scan from GET', async () => {
+    try {
+      const data = await apiGet('/stockroom-scans');
+
+      if (data.length === 0) {
+        console.log('  [SKIP] No stockroom scans available');
+        return;
+      }
+
+      // Strip read-only fields from first scan
+      const payload = stripReadOnlyFields(data[0], StockroomScanConstraints.readOnly);
+
+      const result = validateSchema(StockroomScanPUT, payload, 'StockroomScanPUT from GET response');
+
+      if (!result.success) {
+        console.log('\n  Stripped payload (for debugging):');
+        console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+      }
+    } catch (err) {
+      if (err.message.includes('403') && err.message.includes('Stockroom')) {
+        console.log('  [SKIP] Account does not have Stockroom feature enabled');
+        return;
+      }
+      throw err;
+    }
+  });
+  test4 ? passed++ : failed++;
 
   // Summary
   console.log('\n' + '='.repeat(60));

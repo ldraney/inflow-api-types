@@ -7,8 +7,9 @@
  * real API responses from the Inflow API.
  */
 
-import { apiGet, validateSchema, runTest } from './api.js';
+import { apiGet, validateSchema, runTest, stripReadOnlyFields } from './api.js';
 import { ProductGET, ProductIncludes } from '../dist/products/index.js';
+import { ProductPUT, ProductConstraints } from '../dist/products/index.js';
 import { z } from 'zod';
 
 // Schema for array of products
@@ -230,6 +231,75 @@ async function main() {
     }
   });
   test10 ? passed++ : failed++;
+
+  // ============================================================================
+  // PUT Schema Validation Tests
+  // ============================================================================
+  console.log('\n' + '-'.repeat(60));
+  console.log('PUT Schema Validation (from GET responses)');
+  console.log('-'.repeat(60));
+
+  // Test 11: Validate PUT schema accepts stripped GET response
+  const test11 = await runTest('PUT schema - Single product from GET', async () => {
+    const list = await apiGet('/products', { filter: { isActive: true } });
+    if (list.length === 0) {
+      console.log('  [SKIP] No products available');
+      return;
+    }
+
+    const productId = list[0].productId;
+    const product = await apiGet(`/products/${productId}`);
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(product, ProductConstraints.readOnly);
+
+    const result = validateSchema(ProductPUT, payload, 'ProductPUT from GET response');
+
+    if (!result.success) {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  test11 ? passed++ : failed++;
+
+  // Test 12: Validate PUT schema with nested arrays (prices, vendorItems)
+  const test12 = await runTest('PUT schema - Product with nested arrays', async () => {
+    const list = await apiGet('/products', {
+      include: ['prices', 'vendorItems', 'productBarcodes', 'reorderSettings'],
+      filter: { isActive: true },
+    });
+
+    if (list.length === 0) {
+      console.log('  [SKIP] No products available');
+      return;
+    }
+
+    // Find a product with some nested data
+    const product = list.find(p =>
+      (p.prices?.length > 0) ||
+      (p.vendorItems?.length > 0) ||
+      (p.productBarcodes?.length > 0)
+    ) || list[0];
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(product, ProductConstraints.readOnly);
+
+    const result = validateSchema(ProductPUT, payload, 'ProductPUT with nested arrays');
+
+    if (result.success) {
+      const nested = [];
+      if (payload.prices?.length) nested.push(`${payload.prices.length} prices`);
+      if (payload.vendorItems?.length) nested.push(`${payload.vendorItems.length} vendorItems`);
+      if (payload.productBarcodes?.length) nested.push(`${payload.productBarcodes.length} barcodes`);
+      if (nested.length > 0) {
+        console.log(`  Validated with: ${nested.join(', ')}`);
+      }
+    } else {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  test12 ? passed++ : failed++;
 
   // Summary
   console.log('\n' + '='.repeat(60));

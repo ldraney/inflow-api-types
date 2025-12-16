@@ -4,8 +4,9 @@
  * Run with: npm run test:purchase-orders
  */
 
-import { apiGet, validateSchema, runTest } from './api.js';
+import { apiGet, validateSchema, runTest, stripReadOnlyFields } from './api.js';
 import { PurchaseOrderGET, PurchaseOrderIncludes } from '../dist/purchase-orders/index.js';
+import { PurchaseOrderPUT, PurchaseOrderConstraints } from '../dist/purchase-orders/index.js';
 import { z } from 'zod';
 
 // Schema for array of purchase orders
@@ -191,6 +192,65 @@ async function main() {
     }
   });
   test9 ? passed++ : failed++;
+
+  // ============================================================================
+  // PUT Schema Validation Tests
+  // ============================================================================
+  console.log('\n' + '-'.repeat(60));
+  console.log('PUT Schema Validation (from GET responses)');
+  console.log('-'.repeat(60));
+
+  // Test 10: Validate PUT schema accepts stripped GET response
+  const test10 = await runTest('PUT schema - Single purchase order from GET', async () => {
+    const list = await apiGet('/purchase-orders', { filter: { isActive: true } });
+    if (list.length === 0) {
+      console.log('  [SKIP] No purchase orders available');
+      return;
+    }
+
+    const orderId = list[0].purchaseOrderId;
+    const order = await apiGet(`/purchase-orders/${orderId}`);
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(order, PurchaseOrderConstraints.readOnly);
+
+    const result = validateSchema(PurchaseOrderPUT, payload, 'PurchaseOrderPUT from GET response');
+
+    if (!result.success) {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  test10 ? passed++ : failed++;
+
+  // Test 11: Validate PUT schema with nested arrays (lines)
+  const test11 = await runTest('PUT schema - Purchase order with lines', async () => {
+    const list = await apiGet('/purchase-orders', {
+      include: ['lines'],
+      filter: { isActive: true },
+    });
+
+    if (list.length === 0) {
+      console.log('  [SKIP] No purchase orders available');
+      return;
+    }
+
+    // Find an order with lines
+    const order = list.find(o => o.lines?.length > 0) || list[0];
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(order, PurchaseOrderConstraints.readOnly);
+
+    const result = validateSchema(PurchaseOrderPUT, payload, 'PurchaseOrderPUT with lines');
+
+    if (result.success && payload.lines?.length) {
+      console.log(`  Validated with: ${payload.lines.length} lines`);
+    } else if (!result.success) {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  test11 ? passed++ : failed++;
 
   // Summary
   console.log('\n' + '='.repeat(60));

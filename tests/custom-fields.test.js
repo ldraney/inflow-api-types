@@ -4,8 +4,9 @@
  * Run with: node tests/custom-fields.test.js
  */
 
-import { apiGet, validateSchema, runTest } from './api.js';
+import { apiGet, validateSchema, runTest, stripReadOnlyFields } from './api.js';
 import { CustomFieldsGET } from '../dist/custom-fields/index.js';
+import { CustomFieldsPUT, CustomFieldsConstraints } from '../dist/custom-fields/index.js';
 
 async function main() {
   console.log('='.repeat(60));
@@ -31,6 +32,28 @@ async function main() {
     }
   });
   testCustomFields ? passed++ : failed++;
+
+  // ============================================================================
+  // PUT Schema Validation Tests
+  // ============================================================================
+  console.log('\n' + '-'.repeat(60));
+  console.log('PUT Schema Validation (from GET responses)');
+  console.log('-'.repeat(60));
+
+  const testPUT = await runTest('PUT schema - Custom fields from GET', async () => {
+    const data = await apiGet('/custom-fields');
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(data, CustomFieldsConstraints.readOnly);
+
+    const result = validateSchema(CustomFieldsPUT, payload, 'CustomFieldsPUT from GET response');
+
+    if (!result.success) {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  testPUT ? passed++ : failed++;
 
   // ============================================================================
   // Summary

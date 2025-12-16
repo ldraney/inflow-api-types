@@ -7,8 +7,9 @@
  * real API responses from the Inflow API.
  */
 
-import { apiGet, validateSchema, runTest } from './api.js';
+import { apiGet, validateSchema, runTest, stripReadOnlyFields } from './api.js';
 import { ProductCostAdjustmentGET, ProductCostAdjustmentIncludes } from '../dist/product-cost-adjustments/index.js';
+import { ProductCostAdjustmentPUT, ProductCostAdjustmentConstraints } from '../dist/product-cost-adjustments/index.js';
 import { z } from 'zod';
 
 // Schema for array of product cost adjustments
@@ -108,6 +109,36 @@ async function main() {
     }
   });
   test4 ? passed++ : failed++;
+
+  // ============================================================================
+  // PUT Schema Validation Tests
+  // ============================================================================
+  console.log('\n' + '-'.repeat(60));
+  console.log('PUT Schema Validation (from GET responses)');
+  console.log('-'.repeat(60));
+
+  // Test 5: Validate PUT schema accepts stripped GET response
+  const test5 = await runTest('PUT schema - Single product cost adjustment from GET', async () => {
+    const list = await apiGet('/product-cost-adjustments');
+    if (list.length === 0) {
+      console.log('  [SKIP] No product cost adjustments available');
+      return;
+    }
+
+    const productCostAdjustmentId = list[0].productCostAdjustmentId;
+    const adjustment = await apiGet(`/product-cost-adjustments/${productCostAdjustmentId}`);
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(adjustment, ProductCostAdjustmentConstraints.readOnly);
+
+    const result = validateSchema(ProductCostAdjustmentPUT, payload, 'ProductCostAdjustmentPUT from GET response');
+
+    if (!result.success) {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  test5 ? passed++ : failed++;
 
   // Summary
   console.log('\n' + '='.repeat(60));

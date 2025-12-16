@@ -7,9 +7,11 @@
  * real API responses from the Inflow API.
  */
 
-import { apiGet, validateSchema, runTest } from './api.js';
+import { apiGet, validateSchema, runTest, stripReadOnlyFields } from './api.js';
 import { StockCountGET, StockCountIncludes } from '../dist/stock-counts/index.js';
+import { StockCountPUT, StockCountConstraints } from '../dist/stock-counts/index.js';
 import { CountSheetGET, CountSheetIncludes } from '../dist/count-sheets/index.js';
+import { CountSheetPUT, CountSheetConstraints } from '../dist/count-sheets/index.js';
 import { z } from 'zod';
 
 // Schema for array of stock counts
@@ -168,6 +170,64 @@ async function main() {
     }
   });
   test7 ? passed++ : failed++;
+
+  // ============================================================================
+  // PUT Schema Validation Tests
+  // ============================================================================
+  console.log('\n' + '-'.repeat(60));
+  console.log('PUT Schema Validation (from GET responses)');
+  console.log('-'.repeat(60));
+
+  // Test 8: Validate PUT schema accepts stripped GET response
+  const test8 = await runTest('PUT schema - Single stock count from GET', async () => {
+    const list = await apiGet('/stock-counts');
+    if (list.length === 0) {
+      console.log('  [SKIP] No stock counts available');
+      return;
+    }
+
+    const stockCountId = list[0].stockCountId;
+    const stockCount = await apiGet(`/stock-counts/${stockCountId}`);
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(stockCount, StockCountConstraints.readOnly);
+
+    const result = validateSchema(StockCountPUT, payload, 'StockCountPUT from GET response');
+
+    if (!result.success) {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  test8 ? passed++ : failed++;
+
+  // Test 9: Validate CountSheet PUT schema
+  const test9 = await runTest('PUT schema - Count sheet from GET', async () => {
+    // First get list of stock counts with sheets
+    const list = await apiGet('/stock-counts', {
+      include: ['sheets'],
+    });
+
+    const withSheets = list.find(c => c.sheets && c.sheets.length > 0);
+    if (!withSheets) {
+      console.log('  [SKIP] No count sheets available');
+      return;
+    }
+
+    const countSheetId = withSheets.sheets[0].countSheetId;
+    const countSheet = await apiGet(`/count-sheets/${countSheetId}`);
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(countSheet, CountSheetConstraints.readOnly);
+
+    const result = validateSchema(CountSheetPUT, payload, 'CountSheetPUT from GET response');
+
+    if (!result.success) {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  test9 ? passed++ : failed++;
 
   // Summary
   console.log('\n' + '='.repeat(60));

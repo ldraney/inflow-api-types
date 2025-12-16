@@ -7,8 +7,9 @@
  * real API responses from the Inflow API.
  */
 
-import { apiGet, validateSchema, runTest } from './api.js';
+import { apiGet, validateSchema, runTest, stripReadOnlyFields } from './api.js';
 import { CustomerGET, CustomerIncludes } from '../dist/customers/index.js';
+import { CustomerPUT, CustomerConstraints } from '../dist/customers/index.js';
 import { z } from 'zod';
 
 // Schema for array of customers
@@ -204,6 +205,69 @@ async function main() {
     }
   });
   test9 ? passed++ : failed++;
+
+  // ============================================================================
+  // PUT Schema Validation Tests
+  // ============================================================================
+  console.log('\n' + '-'.repeat(60));
+  console.log('PUT Schema Validation (from GET responses)');
+  console.log('-'.repeat(60));
+
+  // Test 10: Validate PUT schema accepts stripped GET response
+  const test10 = await runTest('PUT schema - Single customer from GET', async () => {
+    const list = await apiGet('/customers', { filter: { isActive: true } });
+    if (list.length === 0) {
+      console.log('  [SKIP] No customers available');
+      return;
+    }
+
+    const customerId = list[0].customerId;
+    const customer = await apiGet(`/customers/${customerId}`);
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(customer, CustomerConstraints.readOnly);
+
+    const result = validateSchema(CustomerPUT, payload, 'CustomerPUT from GET response');
+
+    if (!result.success) {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  test10 ? passed++ : failed++;
+
+  // Test 11: Validate PUT schema with nested arrays (addresses)
+  const test11 = await runTest('PUT schema - Customer with nested arrays', async () => {
+    const list = await apiGet('/customers', {
+      include: ['addresses'],
+      filter: { isActive: true },
+    });
+
+    if (list.length === 0) {
+      console.log('  [SKIP] No customers available');
+      return;
+    }
+
+    // Find a customer with some nested data
+    const customer = list.find(c => c.addresses?.length > 0) || list[0];
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(customer, CustomerConstraints.readOnly);
+
+    const result = validateSchema(CustomerPUT, payload, 'CustomerPUT with nested arrays');
+
+    if (result.success) {
+      const nested = [];
+      if (payload.addresses?.length) nested.push(`${payload.addresses.length} addresses`);
+      if (nested.length > 0) {
+        console.log(`  Validated with: ${nested.join(', ')}`);
+      }
+    } else {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  test11 ? passed++ : failed++;
 
   // Summary
   console.log('\n' + '='.repeat(60));

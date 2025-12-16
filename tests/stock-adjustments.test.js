@@ -7,8 +7,9 @@
  * real API responses from the Inflow API.
  */
 
-import { apiGet, validateSchema, runTest } from './api.js';
+import { apiGet, validateSchema, runTest, stripReadOnlyFields } from './api.js';
 import { StockAdjustmentGET, StockAdjustmentIncludes } from '../dist/stock-adjustments/index.js';
+import { StockAdjustmentPUT, StockAdjustmentConstraints } from '../dist/stock-adjustments/index.js';
 import { z } from 'zod';
 
 // Schema for array of stock adjustments
@@ -168,6 +169,64 @@ async function main() {
     }
   });
   test7 ? passed++ : failed++;
+
+  // ============================================================================
+  // PUT Schema Validation Tests
+  // ============================================================================
+  console.log('\n' + '-'.repeat(60));
+  console.log('PUT Schema Validation (from GET responses)');
+  console.log('-'.repeat(60));
+
+  // Test 8: Validate PUT schema accepts stripped GET response
+  const test8 = await runTest('PUT schema - Single stock adjustment from GET', async () => {
+    const list = await apiGet('/stock-adjustments');
+    if (list.length === 0) {
+      console.log('  [SKIP] No stock adjustments available');
+      return;
+    }
+
+    const stockAdjustmentId = list[0].stockAdjustmentId;
+    const adjustment = await apiGet(`/stock-adjustments/${stockAdjustmentId}`);
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(adjustment, StockAdjustmentConstraints.readOnly);
+
+    const result = validateSchema(StockAdjustmentPUT, payload, 'StockAdjustmentPUT from GET response');
+
+    if (!result.success) {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  test8 ? passed++ : failed++;
+
+  // Test 9: Validate PUT schema with nested arrays (lines)
+  const test9 = await runTest('PUT schema - Stock adjustment with lines', async () => {
+    const list = await apiGet('/stock-adjustments', {
+      include: ['lines'],
+    });
+
+    if (list.length === 0) {
+      console.log('  [SKIP] No stock adjustments available');
+      return;
+    }
+
+    // Find an adjustment with lines
+    const adjustment = list.find(a => a.lines?.length > 0) || list[0];
+
+    // Strip read-only fields
+    const payload = stripReadOnlyFields(adjustment, StockAdjustmentConstraints.readOnly);
+
+    const result = validateSchema(StockAdjustmentPUT, payload, 'StockAdjustmentPUT with lines');
+
+    if (result.success && payload.lines?.length) {
+      console.log(`  Validated with: ${payload.lines.length} lines`);
+    } else if (!result.success) {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  test9 ? passed++ : failed++;
 
   // Summary
   console.log('\n' + '='.repeat(60));

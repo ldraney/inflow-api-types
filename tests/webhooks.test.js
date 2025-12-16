@@ -4,8 +4,9 @@
  * Run with: node tests/webhooks.test.js
  */
 
-import { apiGet, validateSchema, runTest } from './api.js';
+import { apiGet, validateSchema, runTest, stripReadOnlyFields } from './api.js';
 import { WebhookGET } from '../dist/webhooks/index.js';
+import { WebhookPUT, WebhookConstraints } from '../dist/webhooks/index.js';
 import { z } from 'zod';
 
 async function main() {
@@ -32,6 +33,32 @@ async function main() {
     }
   });
   testWebhooks ? passed++ : failed++;
+
+  // ============================================================================
+  // PUT Schema Validation Tests
+  // ============================================================================
+  console.log('\n' + '-'.repeat(60));
+  console.log('PUT Schema Validation (from GET responses)');
+  console.log('-'.repeat(60));
+
+  const testPUT = await runTest('PUT schema - Webhook from GET', async () => {
+    const data = await apiGet('/webhooks');
+    if (data.length === 0) {
+      console.log('  [SKIP] No webhooks configured');
+      return;
+    }
+
+    // Strip read-only fields from first webhook
+    const payload = stripReadOnlyFields(data[0], WebhookConstraints.readOnly);
+
+    const result = validateSchema(WebhookPUT, payload, 'WebhookPUT from GET response');
+
+    if (!result.success) {
+      console.log('\n  Stripped payload (for debugging):');
+      console.log(JSON.stringify(payload, null, 2).split('\n').map(l => '    ' + l).join('\n'));
+    }
+  });
+  testPUT ? passed++ : failed++;
 
   // ============================================================================
   // Summary
